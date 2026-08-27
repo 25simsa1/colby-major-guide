@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ColbyMajorGuide — the Colby program chart</title>
+<meta name="description" content="Every major, concentration and minor at Colby College charted as one network: shared gateway courses, joint degrees, and the rules that lock majors out of each other.">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Crect%20width%3D%2248%22%20height%3D%2248%22%20fill%3D%22%23fff%22%2F%3E%3Cg%20fill%3D%22%23002169%22%3E%3Cpath%20d%3D%22M20.6%2014.2C18.2%209.6%2016.4%204.6%2017.2%202.4c.8-2%203.4-.2%205%202.8%201.4%202.6%202.2%205.4%202.4%207.6z%22%2F%3E%3Cpath%20d%3D%22M26.2%2012.4c1.2-4.4%203.6-8.8%205.8-10.4%201.8-1.3%202.6%201.2%201.6%204.4-1%203-2.6%206-4%208z%22%2F%3E%3Cpath%20d%3D%22M5%2026.5c0-1.1.8-1.7%202-1.9l5.4-1.4c2.6-.8%204.8-2.6%206-4.8l2.4-4.4c1-1.8%202.8-2.4%204.6-2%203.8.8%206.6%203.8%207.4%207.6l2.2%2010.2c.6%202.8%202.2%205.2%204.6%206.8%201.6%201%202.4%202.8%202.4%204.6V46H24.6v-5c0-3.6-2.4-6.8-5.8-7.8L8%2030.2C6%2029.6%205%2028.4%205%2026.5z%22%2F%3E%3Ccircle%20cx%3D%2220.6%22%20cy%3D%2219.6%22%20r%3D%221.7%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%227.6%22%20cy%3D%2227.4%22%20r%3D%221.1%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Crect%20width%3D%2248%22%20height%3D%2248%22%20fill%3D%22%23fff%22%2F%3E%3Cg%20fill%3D%22%23002169%22%3E%3Cpath%20d%3D%22M20.6%2014.2C18.2%209.6%2016.4%204.6%2017.2%202.4c.8-2%203.4-.2%205%202.8%201.4%202.6%202.2%205.4%202.4%207.6z%22%2F%3E%3Cpath%20d%3D%22M26.2%2012.4c1.2-4.4%203.6-8.8%205.8-10.4%201.8-1.3%202.6%201.2%201.6%204.4-1%203-2.6%206-4%208z%22%2F%3E%3Cpath%20d%3D%22M5%2026.5c0-1.1.8-1.7%202-1.9l5.4-1.4c2.6-.8%204.8-2.6%206-4.8l2.4-4.4c1-1.8%202.8-2.4%204.6-2%203.8.8%206.6%203.8%207.4%207.6l2.2%2010.2c.6%202.8%202.2%205.2%204.6%206.8%201.6%201%202.4%202.8%202.4%204.6V46H24.6v-5c0-3.6-2.4-6.8-5.8-7.8L8%2030.2C6%2029.6%205%2028.4%205%2026.5z%22%2F%3E%3Ccircle%20cx%3D%2220.6%22%20cy%3D%2219.6%22%20r%3D%221.7%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%227.6%22%20cy%3D%2227.4%22%20r%3D%221.1%22%20fill%3D%22%23fff%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+<meta name="theme-color" content="#002169">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ColbyMajorGuide — the Colby program chart">
+<meta property="og:description" content="All 101 Colby College programs charted as one network: shared gateway courses, joint degrees, the rules that lock majors out of each other, and everything every student owes whichever major they pick.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index, follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&amp;family=Azeret+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+/* ColbyMajorGuide — Colby Blue on white.
+ * Colby Blue (#002169) carries the chrome and doubles as the selection signal, so the
+ * brand colour actually means something: it marks the program you picked. The three
+ * academic divisions keep their own hues, pushed off Colby Blue's hue angle so a
+ * selected node can never be misread as a division.
+ * Type: Archivo (variable width, used as signage) + Azeret Mono (course codes only).
+ * The mule mark is an original drawing, not the College's athletics logo.
+ */
+
+/* ============================ tokens ============================ */
+:root {
+  --font-sign: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-code: "Azeret Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Colby Blue #002169 (PMS 280 C), the College's primary mark colour, which its
+     identity guidance always sets on white. Everything else is tuned around it. */
+  --colby:       oklch(28.4% 0.132 262);
+
+  /* paper */
+  --ground:      oklch(99.2% 0.002 255);
+  --ground-2:    oklch(96.5% 0.006 255);
+  --ground-3:    oklch(93.5% 0.010 255);
+  --graticule:   oklch(92.5% 0.012 255);
+  --rule:        oklch(88%   0.014 255);
+  --rule-2:      oklch(58%   0.035 258);
+  --edge:        oklch(72%   0.030 255);
+
+  /* ink ramp, tinted toward Colby Blue */
+  --ink:         oklch(25%   0.085 265);
+  --ink-2:       oklch(43%   0.045 262);
+  --ink-3:       oklch(48%   0.032 260);
+
+  /* selection is Colby Blue itself: the brand colour means "this one" */
+  --signal:      var(--colby);
+  --signal-deep: oklch(84%   0.075 262);
+  --signal-wash: oklch(92%   0.050 264);
+
+  /* three territories, pushed off Colby Blue's hue so selection never reads as a division */
+  --terr-sci:      oklch(45% 0.105 228);
+  --terr-soc:      oklch(45% 0.100  70);
+  --terr-hum:      oklch(45% 0.140  25);
+  --terr-sci-wash: oklch(96% 0.026 228);
+  --terr-soc-wash: oklch(96% 0.030  70);
+  --terr-hum-wash: oklch(96% 0.028  25);
+
+  --space-3xs: 0.125rem; --space-2xs: 0.25rem; --space-xs: 0.5rem;
+  --space-sm: 0.75rem;   --space-md: 1rem;     --space-lg: 1.5rem;
+  --space-xl: 2.5rem;    --space-2xl: 4rem;    --space-3xl: 6rem;
+
+  /* 1.28 modular scale */
+  --text-xs:  0.75rem;   --text-sm: 0.8125rem; --text-md: 0.9375rem;
+  --text-lg:  1.1875rem; --text-xl: 1.5rem;    --text-2xl: 1.95rem;
+  --text-3xl: 2.5rem;
+  --text-display: clamp(2.2rem, 5.1vw, 4.35rem);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:  cubic-bezier(0.7, 0, 0.84, 0);
+  --dur-micro: 110ms; --dur-short: 200ms; --dur-long: 420ms;
+
+  --gutter: clamp(1.1rem, 3.6vw, 3.5rem);
+  --z-base: 1; --z-raised: 10; --z-sticky: 200; --z-nav: 300;
+}
+
+/* ============================ base ============================ */
+*, *::before, *::after { box-sizing: border-box; }
+html { overflow-x: clip; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  overflow-x: clip; margin: 0;
+  background: var(--ground); color: var(--ink);
+  font-family: var(--font-sign); font-size: var(--text-md);
+  font-variation-settings: "wdth" 100;
+  line-height: 1.65; font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  margin: 0; font-weight: 700; line-height: 1.06;
+  font-style: normal; text-wrap: balance;
+  overflow-wrap: anywhere; min-width: 0;
+}
+p { margin: 0; text-wrap: pretty; }
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+::selection { background: var(--signal-wash); color: var(--ink); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.shell { max-width: 1680px; margin-inline: auto; padding-inline: var(--gutter); }
+
+/* chart marginalia: the one place small tracked caps are used */
+.spec {
+  font-family: var(--font-code); font-size: var(--text-xs);
+  font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-3); font-variant-numeric: tabular-nums;
+}
+
+/* ============================ plate head ============================ */
+.head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--space-md) var(--space-lg); flex-wrap: wrap;
+  padding: var(--space-lg) var(--gutter) var(--space-md);
+  border-bottom: 1px solid var(--rule);
+}
+.head__mark {
+  font-size: var(--text-md); font-weight: 700;
+  font-variation-settings: "wdth" 115; letter-spacing: 0.01em;
+  text-transform: uppercase; color: var(--ink);
+  text-decoration: none; white-space: nowrap;
+}
+.head__mark b { font-weight: 700; color: var(--terr-sci); }
+@media (max-width: 430px) { .head .spec { display: none; } }
+
+/* ============================ title block ============================ */
+.title { padding-block: clamp(var(--space-xl), 5vw, var(--space-3xl)) var(--space-lg); }
+.title__grid {
+  display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: var(--space-xl) var(--space-2xl); align-items: end;
+}
+.title h1 {
+  font-size: var(--text-display);
+  font-variation-settings: "wdth" 112;
+  letter-spacing: -0.026em; max-width: 21ch;
+}
+.title h1 em { font-style: normal; color: var(--terr-hum); }
+.title__lede {
+  font-size: var(--text-lg); color: var(--ink-2);
+  max-width: 62ch; margin-top: var(--space-lg); line-height: 1.55;
+}
+.title__lede b { color: var(--ink); font-weight: 600; }
+
+/* readings sit as chart marginalia, not as a stat card row */
+.readings { display: grid; gap: 0; }
+.reading {
+  display: grid; grid-template-columns: 4.6rem minmax(0, 1fr);
+  gap: var(--space-md); align-items: baseline;
+  padding-block: var(--space-sm);
+  border-top: 1px solid var(--rule);
+}
+.reading:last-child { border-bottom: 1px solid var(--rule); }
+.reading b {
+  font-family: var(--font-code); font-weight: 700; font-size: var(--text-2xl);
+  line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+.reading span { font-size: var(--text-sm); color: var(--ink-3); line-height: 1.4; }
+@media (max-width: 940px) {
+  .title__grid { grid-template-columns: minmax(0, 1fr); align-items: start; }
+}
+
+/* ============================ chart ============================ */
+.chart { margin-top: var(--space-lg); }
+
+.controls {
+  position: sticky; top: 0; z-index: var(--z-sticky);
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: var(--space-xs) var(--space-md);
+  padding: var(--space-sm) var(--gutter);
+  background: var(--ground);
+  border-block: 1px solid var(--rule);
+}
+@media (max-width: 780px) { .controls { position: static; } }
+.controls__set { display: flex; align-items: center; gap: var(--space-2xs); flex-wrap: wrap; }
+
+.terr-btn {
+  font: 600 var(--text-sm)/1 var(--font-sign);
+  font-variation-settings: "wdth" 92;
+  letter-spacing: 0.02em; text-transform: uppercase; white-space: nowrap;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--rule-2); border-radius: 2px;
+  background: transparent; color: var(--ink-3);
+  transition: color var(--dur-micro) var(--ease-out),
+              border-color var(--dur-micro) var(--ease-out),
+              background-color var(--dur-micro) var(--ease-out),
+              transform var(--dur-micro) var(--ease-out);
+}
+.terr-btn__key {
+  width: 10px; height: 10px; flex: none;
+  background: currentColor; transition: opacity var(--dur-micro) var(--ease-out);
+}
+.terr-btn:hover { color: var(--ink); border-color: var(--ink-3); }
+.terr-btn:active { transform: translateY(1px); }
+.terr-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.terr-btn[aria-pressed="false"] .terr-btn__key { opacity: 0.22; }
+.terr-btn[data-div="sci"][aria-pressed="true"] { color: var(--terr-sci); border-color: var(--terr-sci); background: var(--terr-sci-wash); }
+.terr-btn[data-div="soc"][aria-pressed="true"] { color: var(--terr-soc); border-color: var(--terr-soc); background: var(--terr-soc-wash); }
+.terr-btn[data-div="hum"][aria-pressed="true"] { color: var(--terr-hum); border-color: var(--terr-hum); background: var(--terr-hum-wash); }
+
+.find {
+  flex: 1 1 200px; min-width: 0; max-width: 320px;
+  font: 400 var(--text-sm)/1.4 var(--font-code);
+  padding: var(--space-xs) var(--space-sm);
+  color: var(--ink); background: var(--ground-2);
+  border: 1px solid var(--rule-2); border-radius: 2px;
+}
+.find::placeholder { color: var(--ink-3); }
+.find:hover { border-color: var(--ink-3); }
+.find:focus-visible { outline: 2px solid var(--signal); outline-offset: 1px; }
+.find:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ghost-btn {
+  font: 600 var(--text-sm)/1 var(--font-sign);
+  font-variation-settings: "wdth" 92;
+  letter-spacing: 0.02em; text-transform: uppercase; white-space: nowrap;
+  cursor: pointer; padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--rule-2); border-radius: 2px;
+  background: transparent; color: var(--ink-3);
+  transition: color var(--dur-micro) var(--ease-out),
+              border-color var(--dur-micro) var(--ease-out),
+              transform var(--dur-micro) var(--ease-out);
+}
+.ghost-btn:hover { color: var(--ink); border-color: var(--ink-3); }
+.ghost-btn:active { transform: translateY(1px); }
+.ghost-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.controls__hint { margin-left: auto; white-space: nowrap; }
+@media (max-width: 1080px) { .controls__hint { display: none; } }
+
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 26.5rem; }
+@media (max-width: 1180px) { .stage { grid-template-columns: minmax(0, 1fr); } }
+
+.canvas {
+  position: relative; min-width: 0;
+  display: flex; flex-direction: column;
+  background: var(--ground);
+  border-right: 1px solid var(--rule);
+  overflow: hidden;
+}
+@media (max-width: 1180px) {
+  .canvas { border-right: 0; border-bottom: 1px solid var(--rule); }
+}
+#chart {
+  /* matches the 1600x1000 viewBox, so the plate fills the panel instead of
+     letterboxing 85px of dead ground above and below it */
+  display: block; width: 100%; aspect-ratio: 8 / 5;
+  max-height: 82vh; min-height: 400px;
+  touch-action: none; cursor: grab;
+}
+#chart.is-panning { cursor: grabbing; }
+
+/* --- chart furniture --- */
+.graticule { stroke: var(--graticule); stroke-width: 1; opacity: 0.45; }
+.frame { fill: none; stroke: var(--rule-2); stroke-width: 1; opacity: 0.8; }
+.frame-tick { stroke: var(--rule-2); stroke-width: 1; opacity: 0.8; }
+
+.territory { stroke-width: 1; fill-opacity: 0.85; stroke-opacity: 0.45; }
+.territory[data-div="sci"] { fill: var(--terr-sci-wash); stroke: var(--terr-sci); }
+.territory[data-div="soc"] { fill: var(--terr-soc-wash); stroke: var(--terr-soc); }
+.territory[data-div="hum"] { fill: var(--terr-hum-wash); stroke: var(--terr-hum); }
+
+.terr-name {
+  font-family: var(--font-sign); font-weight: 700; font-size: 25px;
+  font-variation-settings: "wdth" 118; letter-spacing: 0.15em; text-transform: uppercase;
+  pointer-events: none; user-select: none; opacity: 0.55;
+}
+.terr-name[data-div="sci"] { fill: var(--terr-sci); }
+.terr-name[data-div="soc"] { fill: var(--terr-soc); }
+.terr-name[data-div="hum"] { fill: var(--terr-hum); }
+
+.link { stroke: var(--edge); stroke-width: 1.15; fill: none; opacity: 0.55; }
+.link--cross { stroke-dasharray: 6 5; opacity: 0.4; }
+.link--tether { opacity: 0.7; stroke-width: 1; }
+.link--tether[data-div="sci"] { stroke: var(--terr-sci); }
+.link--tether[data-div="soc"] { stroke: var(--terr-soc); }
+.link--tether[data-div="hum"] { stroke: var(--terr-hum); }
+.link.is-live { stroke: var(--signal); stroke-width: 2.2; opacity: 1; }
+.link.is-mute { opacity: 0.16; }
+
+.dot { cursor: pointer; }
+.dot__disc { stroke-width: 1.6; }
+.dot[data-div="sci"] .dot__disc { fill: var(--terr-sci); stroke: var(--ground); }
+.dot[data-div="soc"] .dot__disc { fill: var(--terr-soc); stroke: var(--ground); }
+.dot[data-div="hum"] .dot__disc { fill: var(--terr-hum); stroke: var(--ground); }
+.dot__core { fill: var(--ground); }
+/* a minor is a satellite of its major: hollow, so the majors still carry the read */
+.dot[data-kind="minor"] .dot__disc { fill: var(--ground); stroke-width: 2; }
+.dot[data-kind="minor"][data-div="sci"] .dot__disc { stroke: var(--terr-sci); }
+.dot[data-kind="minor"][data-div="soc"] .dot__disc { stroke: var(--terr-soc); }
+.dot[data-kind="minor"][data-div="hum"] .dot__disc { stroke: var(--terr-hum); }
+.dot[data-kind="minor"] .dot__name { font-size: 15px; fill: var(--ink-3); }
+.dot[data-kind="minor"].is-live .dot__disc { fill: var(--signal); stroke: var(--signal); }
+.dot__halo { fill: none; stroke-width: 1.3; opacity: 0; }
+.dot__name {
+  font-family: var(--font-sign); font-weight: 500; font-size: 16px;
+  font-variation-settings: "wdth" 84;
+  fill: var(--ink-2); pointer-events: none; user-select: none;
+  paint-order: stroke; stroke: var(--ground); stroke-width: 4.5px; stroke-linejoin: round;
+}
+.dot.is-live .dot__disc { fill: var(--signal); stroke: var(--ground); }
+.dot.is-live .dot__core { fill: var(--signal-deep); }
+.dot.is-live .dot__halo { stroke: var(--signal); opacity: 0.8; }
+.dot.is-live .dot__name { fill: var(--ink); font-weight: 700; font-variation-settings: "wdth" 96; }
+.dot.is-near .dot__name { fill: var(--ink); }
+.dot.is-mute { opacity: 0.3; }
+.dot:focus-visible { outline: none; }
+.dot:focus-visible .dot__disc { stroke: var(--signal); stroke-width: 4; }
+
+.key {
+  display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-lg);
+  padding: var(--space-sm) var(--space-lg);
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-code); font-size: var(--text-xs);
+  letter-spacing: 0.04em; color: var(--ink-3);
+}
+.key div { display: flex; align-items: center; gap: 0.45rem; white-space: nowrap; }
+/* the swatches say what the marks are; this says what they mean */
+.key__note {
+  padding: 0 var(--space-lg) var(--space-md);
+  font-size: var(--text-sm); line-height: 1.6;
+  color: var(--ink-3); max-width: 78ch;
+}
+.key-line { width: 20px; height: 0; border-top: 1px solid var(--edge); flex: none; }
+.key-line--dash { border-top-style: dashed; }
+.key-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); flex: none; }
+.key-dot--lg { width: 15px; height: 15px; }
+.key-ring { width: 13px; height: 13px; border-radius: 50%; border: 1px solid var(--ink-3); box-shadow: 0 0 0 2px var(--ground), 0 0 0 3px var(--ink-3); flex: none; }
+.key-hollow { width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--ink-3); flex: none; }
+
+/* ============================ readout ============================ */
+.readout {
+  min-width: 0; background: var(--ground);
+  display: flex; flex-direction: column;
+  max-height: 82vh;
+}
+@media (max-width: 1180px) { .readout { max-height: none; } }
+.readout__body { overflow-y: auto; padding: var(--space-lg) var(--space-lg) var(--space-2xl); }
+
+.idle { color: var(--ink-3); font-size: var(--text-sm); max-width: 46ch; }
+.idle b { display: block; color: var(--ink-2); font-weight: 600; margin-bottom: var(--space-2xs); }
+
+.pgm__tag {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  font-family: var(--font-code); font-size: var(--text-xs); font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 0.2rem 0.45rem; border: 1px solid currentColor; border-radius: 2px;
+  margin-bottom: var(--space-sm);
+}
+.pgm__tag[data-div="sci"] { color: var(--terr-sci); background: var(--terr-sci-wash); }
+.pgm__tag[data-div="soc"] { color: var(--terr-soc); background: var(--terr-soc-wash); }
+.pgm__tag[data-div="hum"] { color: var(--terr-hum); background: var(--terr-hum-wash); }
+
+.pgm h2 {
+  font-size: var(--text-xl); font-variation-settings: "wdth" 104;
+  letter-spacing: -0.018em; line-height: 1.12;
+}
+.pgm__dept {
+  font-family: var(--font-code); font-size: var(--text-xs);
+  color: var(--ink-3); margin-top: var(--space-xs); letter-spacing: 0.02em; line-height: 1.5;
+}
+.pgm__note { margin-top: var(--space-md); font-size: var(--text-md); color: var(--ink-2); max-width: 48ch; }
+
+.pgm h3 {
+  font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--ink-3);
+  font-variation-settings: "wdth" 92;
+  margin: var(--space-xl) 0 var(--space-md);
+  padding-bottom: var(--space-2xs); border-bottom: 1px solid var(--rule);
+}
+
+/* the four-year path reads as a route, not a list */
+.route { list-style: none; margin: 0; padding: 0; position: relative; }
+.route::before {
+  content: ""; position: absolute; left: 5px; top: 10px; bottom: 12px;
+  width: 1px; background: var(--rule-2);
+}
+.route li { position: relative; padding: 0 0 var(--space-lg) var(--space-xl); }
+.route li:last-child { padding-bottom: 0; }
+.route li::before {
+  content: ""; position: absolute; left: 0; top: 6px;
+  width: 11px; height: 11px; border-radius: 50%;
+  background: var(--ground); border: 2px solid var(--rule-2);
+}
+.route li:last-child::before { border-color: var(--signal); background: var(--signal); }
+.route__year {
+  display: block; font-family: var(--font-code); font-size: var(--text-xs);
+  font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: var(--space-2xs);
+}
+.route__what { font-size: var(--text-sm); line-height: 1.7; color: var(--ink-2); }
+.code {
+  font-family: var(--font-code); font-size: 0.76rem; font-weight: 500;
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+  color: var(--ink); background: var(--ground-3);
+  padding: 0.1em 0.34em; border-radius: 2px;
+}
+
+.gates { list-style: none; margin: 0; padding: 0; font-size: var(--text-sm); }
+.gates li {
+  position: relative; padding-left: var(--space-md);
+  margin-bottom: var(--space-sm); color: var(--ink-3); line-height: 1.6;
+}
+.gates li::before {
+  content: ""; position: absolute; left: 0; top: 0.62em;
+  width: 7px; height: 1px; background: var(--signal);
+}
+.gates li b { color: var(--ink); font-weight: 600; }
+
+.jump { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+.jump button {
+  font: 500 var(--text-sm)/1 var(--font-sign);
+  font-variation-settings: "wdth" 90;
+  white-space: nowrap; cursor: pointer;
+  padding: 0.32rem 0.5rem; border-radius: 2px;
+  border: 1px solid var(--rule); background: transparent; color: var(--ink-2);
+  transition: color var(--dur-micro) var(--ease-out),
+              border-color var(--dur-micro) var(--ease-out),
+              background-color var(--dur-micro) var(--ease-out),
+              transform var(--dur-micro) var(--ease-out);
+}
+.jump button:hover { color: var(--ground); background: var(--signal); border-color: var(--signal); }
+.jump button:active { transform: translateY(1px); }
+.jump button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ============================ index ============================ */
+.index { padding-block: var(--space-3xl) var(--space-2xl); }
+.index__head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--space-md); flex-wrap: wrap; margin-bottom: var(--space-xl);
+}
+.index h2 {
+  font-size: clamp(1.7rem, 3.6vw, var(--text-3xl));
+  font-variation-settings: "wdth" 110; letter-spacing: -0.022em;
+}
+
+.group { margin-bottom: var(--space-2xl); }
+.group__bar {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--space-md); flex-wrap: wrap;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 2px;
+}
+.group__bar h3 {
+  font-size: var(--text-lg); font-weight: 700;
+  font-variation-settings: "wdth" 112; letter-spacing: 0.02em; text-transform: uppercase;
+}
+.group__bar p { font-family: var(--font-code); font-size: var(--text-xs); letter-spacing: 0.05em; }
+.group[data-div="sci"] .group__bar { background: var(--terr-sci-wash); color: var(--terr-sci); }
+.group[data-div="soc"] .group__bar { background: var(--terr-soc-wash); color: var(--terr-soc); }
+.group[data-div="hum"] .group__bar { background: var(--terr-hum-wash); color: var(--terr-hum); }
+.group__note { color: var(--ink-3); font-size: var(--text-sm); max-width: 72ch; margin: var(--space-md) var(--space-md) var(--space-lg); }
+
+.rows { border-top: 1px solid var(--rule); }
+.entry {
+  display: grid;
+  grid-template-columns: 1.1rem minmax(0, 1.55fr) minmax(0, 1fr) minmax(0, 1fr) 7.5rem;
+  gap: var(--space-md); align-items: baseline;
+  width: 100%; text-align: left; cursor: pointer; font: inherit; color: inherit;
+  background: transparent; border: 0; border-bottom: 1px solid var(--rule);
+  padding: var(--space-md) var(--space-xs);
+  transition: background-color var(--dur-micro) var(--ease-out);
+}
+.entry:hover, .entry:focus-visible { background: var(--ground-2); }
+.entry:active { background: var(--ground-3); }
+.entry:disabled { opacity: 0.5; cursor: not-allowed; }
+.entry__key {
+  width: 11px; height: 11px; border-radius: 50%; align-self: center;
+  transform: translateY(-1px);
+}
+.entry[data-div="sci"] .entry__key { background: var(--terr-sci); }
+.entry[data-div="soc"] .entry__key { background: var(--terr-soc); }
+.entry[data-div="hum"] .entry__key { background: var(--terr-hum); }
+.entry__name {
+  font-size: var(--text-lg); font-weight: 600;
+  font-variation-settings: "wdth" 100; letter-spacing: -0.012em;
+  min-width: 0; overflow-wrap: anywhere; line-height: 1.25;
+}
+.entry__name small {
+  display: block; font-family: var(--font-code); font-weight: 400;
+  font-size: var(--text-xs); letter-spacing: 0.02em;
+  color: var(--ink-3); margin-top: 0.3rem; text-transform: none;
+}
+.entry__cell {
+  font-family: var(--font-code); font-size: var(--text-xs);
+  color: var(--ink-2); min-width: 0; line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+}
+.entry__cell em {
+  font-style: normal; display: block; margin-bottom: 0.25rem;
+  color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.68rem;
+}
+.entry__kind {
+  font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--ink-3); text-align: right; white-space: nowrap;
+  font-variation-settings: "wdth" 88;
+}
+@media (max-width: 1000px) {
+  .entry { grid-template-columns: 1.1rem minmax(0, 1fr) 6.5rem; }
+  .entry__cell { display: none; }
+}
+@media (max-width: 520px) {
+  .entry { grid-template-columns: 1.1rem minmax(0, 1fr); }
+  .entry__kind { display: none; }
+}
+.empty-note { color: var(--ink-3); font-size: var(--text-sm); padding: var(--space-lg) var(--space-xs); }
+
+/* ============================ colophon ============================ */
+.colophon {
+  border-top: 1px solid var(--rule-2);
+  padding-block: var(--space-xl) var(--space-3xl);
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  gap: var(--space-lg) var(--space-2xl); align-items: start;
+}
+@media (max-width: 820px) { .colophon { grid-template-columns: minmax(0, 1fr); } }
+.colophon__mark {
+  font-size: var(--text-lg); font-weight: 700;
+  font-variation-settings: "wdth" 115; text-transform: uppercase; letter-spacing: 0.01em;
+}
+.colophon__mark b { color: var(--terr-sci); }
+.colophon p { font-size: var(--text-sm); color: var(--ink-3); max-width: 68ch; }
+.colophon p + p { margin-top: var(--space-sm); }
+.colophon a { color: var(--signal); text-underline-offset: 3px; }
+.colophon a:hover { color: var(--ink); }
+
+.mule { flex: none; fill: var(--colby); display: block; }
+.head__logo { display: block; height: 30px; width: auto; flex: none; }
+@media (max-width: 430px) { .head__logo { height: 24px; } }
+/* The College's own wordmark is on this page, so the fact that this is not the
+   College's page has to be visible at the top, not only in the colophon. */
+.tag-unofficial {
+  font-family: var(--font-code); font-size: 0.6875rem; font-weight: 700;
+  letter-spacing: 0.09em; text-transform: uppercase; white-space: nowrap;
+  color: var(--terr-hum); border: 1px solid currentColor; border-radius: 2px;
+  padding: 0.16rem 0.4rem;
+}
+.head__meta { display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap; }
+.head__brand { display: flex; align-items: center; gap: var(--space-sm); text-decoration: none; color: inherit; }
+.head__brand .mule[hidden] { display: none; }
+.colophon__brand { display: flex; align-items: center; gap: var(--space-sm); }
+.colophon__brand .mule { width: 40px; height: 40px; }
+.disclaimer {
+  margin-top: var(--space-lg); padding: var(--space-md);
+  border: 1px solid var(--rule-2); border-radius: 2px;
+  background: var(--ground-2);
+}
+.disclaimer p { color: var(--ink-2); max-width: 74ch; }
+.disclaimer b { color: var(--ink); font-weight: 700; }
+
+/* ============================ the datum ============================
+ * The all-College requirements: the base plane every program on the chart sits
+ * on. Presented as a ledger, not as another network. */
+.datum { padding-block: var(--space-3xl) var(--space-xl); border-top: 1px solid var(--rule-2); }
+.datum__head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--space-md); flex-wrap: wrap;
+}
+.datum h2 {
+  font-size: clamp(1.7rem, 3.6vw, var(--text-3xl));
+  font-variation-settings: "wdth" 110; letter-spacing: -0.022em;
+}
+.datum__lede {
+  margin-top: var(--space-md); font-size: var(--text-lg);
+  color: var(--ink-2); max-width: 66ch; line-height: 1.55;
+}
+.datum__lede b { color: var(--ink); font-weight: 600; }
+.datum__sub {
+  font-size: var(--text-lg); font-weight: 700;
+  font-variation-settings: "wdth" 106; letter-spacing: -0.012em;
+  margin: var(--space-2xl) 0 var(--space-md);
+  padding-bottom: var(--space-xs); border-bottom: 1px solid var(--rule);
+}
+
+/* six areas, and the one that is worth two */
+.areas { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-xs); }
+.area {
+  border: 1px solid var(--rule); border-radius: 2px;
+  padding: var(--space-md) var(--space-md) var(--space-lg);
+  display: flex; flex-direction: column; gap: var(--space-2xs); min-width: 0;
+}
+.area--double { border-color: var(--terr-sci); background: var(--terr-sci-wash); }
+.area__glyph {
+  font-family: var(--font-code); font-weight: 700; font-size: 2.4rem;
+  line-height: 1; letter-spacing: -0.04em; color: var(--ink);
+}
+.area--double .area__glyph { color: var(--terr-sci); font-size: 2rem; }
+.area__name {
+  font-size: var(--text-md); font-weight: 600; line-height: 1.25;
+  font-variation-settings: "wdth" 96; margin-top: var(--space-2xs);
+}
+.area__how { font-size: var(--text-sm); color: var(--ink-3); line-height: 1.45; }
+.area--double .area__how { color: var(--terr-sci); }
+
+/* the first year, the only one with dated obligations */
+.firstyear { list-style: none; margin: 0; padding: 0; counter-reset: fy; }
+.firstyear li {
+  position: relative; counter-increment: fy;
+  padding: var(--space-md) 0 var(--space-md) var(--space-2xl);
+  border-bottom: 1px solid var(--rule);
+}
+.firstyear li::before {
+  content: counter(fy, decimal-leading-zero);
+  position: absolute; left: 0; top: var(--space-md);
+  font-family: var(--font-code); font-size: var(--text-sm); font-weight: 700;
+  color: var(--signal); letter-spacing: 0.04em;
+}
+.firstyear b { display: block; font-weight: 600; font-size: var(--text-md); margin-bottom: 0.2rem; }
+/* direct child only: a nested .code span must stay inline */
+.firstyear li > span { display: block; font-size: var(--text-sm); color: var(--ink-3); line-height: 1.6; max-width: 74ch; }
+
+/* the ledger */
+.ledger { margin: 0; display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); gap: 0; }
+.ledger dt {
+  font-size: var(--text-sm); font-weight: 700; letter-spacing: 0.05em;
+  text-transform: uppercase; font-variation-settings: "wdth" 92;
+  color: var(--ink); padding: var(--space-md) var(--space-md) var(--space-md) 0;
+  border-top: 1px solid var(--rule);
+}
+.ledger dd {
+  margin: 0; font-size: var(--text-sm); color: var(--ink-3); line-height: 1.65;
+  padding: var(--space-md) 0; border-top: 1px solid var(--rule);
+  min-width: 0; max-width: 72ch;
+}
+.ledger dd b { color: var(--ink-2); font-weight: 600; }
+@media (max-width: 720px) {
+  .ledger { grid-template-columns: minmax(0, 1fr); }
+  .ledger dt { padding-bottom: var(--space-2xs); }
+  .ledger dd { border-top: 0; padding-top: 0; }
+}
+
+/* how to read a course number */
+.numkey { display: grid; gap: 0; margin-top: var(--space-md); }
+.numkey div {
+  display: grid; grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: var(--space-md); align-items: baseline;
+  padding: var(--space-sm) 0; border-top: 1px solid var(--rule);
+  font-size: var(--text-sm); color: var(--ink-3);
+}
+.numkey div > span { max-width: 72ch; }
+.numkey b {
+  font-family: var(--font-code); font-weight: 700; color: var(--ink);
+  font-variant-numeric: tabular-nums; letter-spacing: 0.02em;
+}
+.numkey div:nth-child(-n+2) b { color: var(--signal); }
+.datum__note { font-size: var(--text-sm); color: var(--ink-3); max-width: 74ch; margin-top: var(--space-lg); line-height: 1.7; }
+
+/* ============================ motion ============================
+ * The plate is fully visible by default; the entrance is additive only, so a
+ * headless render or a background tab still ships a complete page. */
+@media (prefers-reduced-motion: no-preference) {
+  .lift { animation: lift var(--dur-long) var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * 65ms); }
+  @keyframes lift { from { opacity: 0; transform: translateY(10px); } }
+
+  /* hubs land first, leaves follow: the chart assembles by importance */
+  .dot { animation: plot 420ms var(--ease-out) backwards; animation-delay: calc(var(--d, 0) * 9ms + 140ms); }
+  @keyframes plot { from { opacity: 0; transform: scale(0.55); } }
+  .link { animation: ink 760ms var(--ease-out) backwards; animation-delay: 70ms; }
+  @keyframes ink { from { opacity: 0; } }
+  .territory { animation: ink 900ms var(--ease-out) backwards; }
+
+  .dot__disc, .dot__core, .dot__halo {
+    transition: fill var(--dur-short) var(--ease-out), opacity var(--dur-short) var(--ease-out);
+  }
+  .link {
+    transition: stroke var(--dur-short) var(--ease-out), opacity var(--dur-short) var(--ease-out),
+                stroke-width var(--dur-short) var(--ease-out);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="head">
+  <a class="head__brand" href="#top">
+    <img class="head__logo" src="colby-wordmark.png" width="480" height="238"
+         alt="Colby" fetchpriority="high">
+    <svg class="mule" viewBox="0 0 48 48" aria-hidden="true" hidden><path d="M20.6 14.2C18.2 9.6 16.4 4.6 17.2 2.4c.8-2 3.4-.2 5 2.8 1.4 2.6 2.2 5.4 2.4 7.6z"/><path d="M26.2 12.4c1.2-4.4 3.6-8.8 5.8-10.4 1.8-1.3 2.6 1.2 1.6 4.4-1 3-2.6 6-4 8z"/><path d="M5 26.5c0-1.1.8-1.7 2-1.9l5.4-1.4c2.6-.8 4.8-2.6 6-4.8l2.4-4.4c1-1.8 2.8-2.4 4.6-2 3.8.8 6.6 3.8 7.4 7.6l2.2 10.2c.6 2.8 2.2 5.2 4.6 6.8 1.6 1 2.4 2.8 2.4 4.6V46H24.6v-5c0-3.6-2.4-6.8-5.8-7.8L8 30.2C6 29.6 5 28.4 5 26.5z"/><circle cx="20.6" cy="19.6" r="1.7" fill="var(--ground)"/><circle cx="7.6" cy="27.4" r="1.1" fill="var(--ground)"/></svg>
+    <span class="head__mark"><b>Major</b>Guide</span>
+  </a>
+  <div class="head__meta">
+    <span class="tag-unofficial" title="Not a Colby College publication">Unofficial</span>
+    <p class="spec"><a href="#requirements" style="color:inherit;text-underline-offset:3px">All-College requirements</a> &middot; catalogue 2026&ndash;27</p>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="shell title">
+    <div class="title__grid">
+      <div>
+        <h1 class="lift" style="--i:0">Discover every path Colby offers</h1>
+        <p class="title__lede lift" style="--i:1">The Colby catalogue lists departments and programs alphabetically, as though the order didn&rsquo;t matter. But if you look at <b>which majors share a gateway course, which ones lock each other out,</b> and how a first-year course you already took can open three doors, things start to make more sense. The routes in this chart follow the shared requirements, our joint degree options, and the named prerequisite bridges that got so many of you through your minor and into the major it lives inside. Beneath every route are <a href="#requirements" style="color:var(--signal);text-underline-offset:3px">the requirements all Colby students have to finish</a>, no matter which major they pick.</p>
+      </div>
+      <div class="readings lift" style="--i:2">
+        <div class="reading"><b id="n-programs">101</b><span>programs charted &mdash; every major, concentration and minor in the catalogue</span></div>
+        <div class="reading"><b id="n-minors">39</b><span>of them minors, tethered to the major they sit inside</span></div>
+        <div class="reading"><b id="n-links">397</b><span>requirement links between them</span></div>
+        <div class="reading"><b id="n-cross">86</b><span>of those cross a division boundary</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chart" aria-labelledby="chart-h">
+    <h2 id="chart-h" class="sr-only">Interactive chart of Colby programs</h2>
+
+    <div class="controls">
+      <div class="controls__set" role="group" aria-label="Show or hide a division">
+        <button class="terr-btn" type="button" data-div="sci" aria-pressed="true"><span class="terr-btn__key"></span>Natural sciences</button>
+        <button class="terr-btn" type="button" data-div="soc" aria-pressed="true"><span class="terr-btn__key"></span>Social sciences</button>
+        <button class="terr-btn" type="button" data-div="hum" aria-pressed="true"><span class="terr-btn__key"></span>Humanities</button>
+      </div>
+      <button class="terr-btn" type="button" id="toggle-minors" aria-pressed="true"><span class="terr-btn__key" style="border-radius:50%;background:transparent;box-shadow:inset 0 0 0 2px currentColor"></span>Minors</button>
+      <label class="sr-only" for="find">Search programs and course codes</label>
+      <input class="find" id="find" type="search" placeholder="Search a program or course code" autocomplete="off">
+      <button class="ghost-btn" type="button" id="reset">Reset</button>
+      <p class="spec controls__hint">Drag to pan &middot; pinch or ctrl-scroll to zoom &middot; click a program for its route</p>
+    </div>
+
+    <div class="stage">
+      <div class="canvas">
+        <svg id="chart" role="application" aria-label="Network chart of Colby College programs. Tab moves between programs, Enter opens one."></svg>
+        <div class="key" aria-hidden="true">
+          <div><span class="key-line"></span>Shared requirement</div>
+          <div><span class="key-line key-line--dash"></span>Crosses a division</div>
+          <div><span class="key-dot"></span><span class="key-dot key-dot--lg"></span>Sized by connections</div>
+          <div><span class="key-ring"></span>Concentration inside a major</div>
+          <div><span class="key-hollow"></span>Minor, tethered to its major</div>
+        </div>
+        <p class="key__note">Solid pale lines mean two programs share a required course, dashed lines mean that shared requirement crosses a division boundary, the shorter coloured lines tether each minor to the major it lives inside, and any line turns Colby Blue when you select a program at one of its ends.</p>
+      </div>
+
+      <aside class="readout" aria-live="polite">
+        <div class="readout__body" id="readout">
+          <p class="idle"><b>Nothing selected.</b>Pick a program on the chart, or a row from the index below. You get its four-year route with real course numbers, the rules that can lock you out, and every program it shares requirements with.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="shell datum" id="requirements">
+    <div class="datum__head">
+      <h2>Underneath all of it</h2>
+      <p class="spec">Bachelor of arts &middot; all-College requirements</p>
+    </div>
+    <p class="datum__lede">Every route on the chart above sits on the same base plane. <b>128 credits, at least seven full-time semesters, a 2.00 cumulative average</b>, and a fixed set of courses you owe the College whichever major you pick. Normally you clear the distribution areas in your first two years, which is exactly when the major requirements are lightest. <b>No part of any of it may be taken satisfactory/unsatisfactory.</b></p>
+
+    <h3 class="datum__sub">The six distribution areas</h3>
+    <div class="areas">
+      <div class="area"><span class="area__glyph">A</span><span class="area__name">Arts</span><span class="area__how">One course &middot; history, theory or practice of the creative arts</span></div>
+      <div class="area"><span class="area__glyph">H</span><span class="area__name">Historical Studies</span><span class="area__how">One course &middot; cultures and societies as they change through time</span></div>
+      <div class="area"><span class="area__glyph">L</span><span class="area__name">Literature</span><span class="area__how">One course &middot; literary works, and the methods for analysing them</span></div>
+      <div class="area"><span class="area__glyph">Q</span><span class="area__name">Quantitative Reasoning</span><span class="area__how">One course &middot; reasoning about formally defined abstract structures</span></div>
+      <div class="area area--double"><span class="area__glyph">N &times;2</span><span class="area__name">Natural Sciences</span><span class="area__how">Two courses &mdash; and at least one must carry a substantial laboratory (Lb, or OptLb taken with the lab)</span></div>
+      <div class="area"><span class="area__glyph">S</span><span class="area__name">Social Sciences</span><span class="area__how">One course &middot; methodical inquiry into human behaviour and interaction</span></div>
+    </div>
+
+    <h3 class="datum__sub">Your first year, specifically</h3>
+    <ol class="firstyear">
+      <li><b>A W1 writing course, during the first year.</b><span>The only exemption is a transfer student who completed an equivalent before arriving. W1 courses run out of departments across the College &mdash; Writing, English, Physics, Psychology among them &mdash; and all of them centre on drafting, argument and revision.</span></li>
+      <li><b>A January Program, on campus.</b><span>First-years must take one and, unlike everyone else, cannot opt out. You get preference in 100-level programs. Fail to register by the third day of January and it is recorded as a failed program on your transcript.</span></li>
+      <li><b>The First-Year Journey, in full.</b><span>Part of the wellness requirement, along with the web-based eCheckup and a two-session sexual violence prevention training, both due in the semester you arrive. It earns no academic credit and is still a graduation requirement.</span></li>
+      <li><b>Start the language requirement.</b><span>Take the placement exam; the score lands in Workday. New language, register at <span class="code">125</span>. Continuing one from school, register where placement puts you. Native speaker of a language taught here, contact that department chair and the requirement is marked fulfilled.</span></li>
+      <li><b>Expect to live at the 100 level.</b><span>First-years get priority there; 200-level courses only open to sophomores and above. You may declare a major in your second semester, but nothing forces the decision until you register for junior year.</span></li>
+    </ol>
+
+    <h3 class="datum__sub">The rest of the ledger</h3>
+    <dl class="ledger">
+      <dt>Credits</dt><dd><b>128 minimum</b>, earned across at least seven semesters of full-time study. At most 16 of them may be satisfactory/unsatisfactory. A normal load is 12&ndash;16 credits a semester plus one January offering worth up to three.</dd>
+      <dt>Residence</dt><dd><b>At least 64 credits earned in residence</b>, and at least four semesters as a resident student &mdash; including your last one. Resident means full-time, 12 credits or more, paying tuition at the semester rate.</dd>
+      <dt>Grades</dt><dd><b>2.00 cumulative minimum.</b> A semester below 2.00 puts you on probation; below 1.70, or below 2.00 while already on probation, is dismissal for an academic year.</dd>
+      <dt>Foreign language</dt><dd>Three semesters of a single language &mdash; modern languages usually numbered <span class="code">127</span> and up, classical usually <span class="code">131</span> and up. Or place out: 640+ on an SAT subject or Colby placement test, 4&ndash;5 on an AP, 6&ndash;7 on an IB higher-level exam or 7 on a standard-level one. Or complete the intensive program in Salamanca or Dijon. Chinese, French, German, Greek, Hebrew, Italian, Japanese, Latin, Russian and Spanish are taught here.</dd>
+      <dt>Diversity</dt><dd><b>Two courses</b> centrally concerned with prejudice, privilege, oppression, inequality and injustice &mdash; their structures and consequences, the efforts against them, or the progress made. One must treat these as they concern the United States (<b>U</b>), one in a context other than the United States (<b>I</b>). Many also satisfy an area requirement at the same time.</dd>
+      <dt>Wellness</dt><dd>Three programs: the web-based eCheckup, a two-session sexual violence prevention training, and the First-Year Journey. Certified by the Dean of the College Division, worth no academic credit, and not finishing it can cost you leadership positions and application-based housing.</dd>
+      <dt>The major</dt><dd>Exactly one is required. You may declare from your second semester and <b>must declare before selecting junior-year courses</b>. You can change up to the end of junior year if you have 12 credits at a 2.00 average in the new one. If your major average falls below 2.00 in senior year the degree is not awarded.</dd>
+      <dt>January Program</dt><dd><b>Three</b> if you are in residence seven semesters or more, <b>two</b> if six or fewer. No more than one a year except in unusual circumstances. January courses carry zero, two or three credits, and you are expected to put 30&ndash;40 hours a week into one.</dd>
+    </dl>
+
+    <h3 class="datum__sub">Reading a course number</h3>
+    <div class="numkey">
+      <div><b>000</b><span>Noncredit January programs. Priority to first-year students unless noted.</span></div>
+      <div><b>100</b><span>Priority to first-year students. Most of your first year lives here.</span></div>
+      <div><b>200</b><span>Open to sophomores and the classes above.</span></div>
+      <div><b>300</b><span>Open to juniors and seniors.</span></div>
+      <div><b>400</b><span>Restricted to seniors.</span></div>
+    </div>
+    <p class="datum__note">Reserved numbers you will meet on the chart: <span class="code">090</span> internship, <span class="code">091</span> and <span class="code">291</span> January independent study, <span class="code">_97</span> and <span class="code">_98</span> special topics, <span class="code">483</span> and <span class="code">484</span> honours project, <span class="code">491</span> and <span class="code">492</span> independent study. An instructor may admit you to a level normally closed to your class, and to any course whose stated prerequisite you have not met.</p>
+  </section>
+
+  <section class="shell index" id="index">
+    <div class="index__head">
+      <h2>Index of programs</h2>
+      <p class="spec" id="index-spec"></p>
+    </div>
+
+    <div class="group" data-div="sci" id="g-sci">
+      <div class="group__bar"><h3>Natural sciences &amp; mathematics</h3><p id="count-sci"></p></div>
+      <p class="group__note">The most sequenced division at Colby. Almost every route here is gated by a first-year lab or a calculus placement, and several majors formally exclude each other, so the order you take things in matters more than it does anywhere else on this chart.</p>
+      <div class="rows" id="rows-sci"></div>
+    </div>
+
+    <div class="group" data-div="soc" id="g-soc">
+      <div class="group__bar"><h3>Social sciences</h3><p id="count-soc"></p></div>
+      <p class="group__note">The hinge of the chart. Every department here runs its own research-methods course, and those are the most widely substituted requirement at Colby: pass one and you have partly satisfied four other programs.</p>
+      <div class="rows" id="rows-soc"></div>
+    </div>
+
+    <div class="group" data-div="hum" id="g-hum">
+      <div class="group__bar"><h3>Humanities</h3><p id="count-hum"></p></div>
+      <p class="group__note">Fewer prerequisites, more joint degrees. Classics and English are braided into three combined majors, computation reaches into music and theater, and the area-studies departments are built almost entirely out of other departments&rsquo; courses.</p>
+      <div class="rows" id="rows-hum"></div>
+    </div>
+  </section>
+
+  <footer class="shell colophon">
+    <div>
+      <div class="colophon__brand">
+        <svg class="mule" viewBox="0 0 48 48" aria-hidden="true"><path d="M20.6 14.2C18.2 9.6 16.4 4.6 17.2 2.4c.8-2 3.4-.2 5 2.8 1.4 2.6 2.2 5.4 2.4 7.6z"/><path d="M26.2 12.4c1.2-4.4 3.6-8.8 5.8-10.4 1.8-1.3 2.6 1.2 1.6 4.4-1 3-2.6 6-4 8z"/><path d="M5 26.5c0-1.1.8-1.7 2-1.9l5.4-1.4c2.6-.8 4.8-2.6 6-4.8l2.4-4.4c1-1.8 2.8-2.4 4.6-2 3.8.8 6.6 3.8 7.4 7.6l2.2 10.2c.6 2.8 2.2 5.2 4.6 6.8 1.6 1 2.4 2.8 2.4 4.6V46H24.6v-5c0-3.6-2.4-6.8-5.8-7.8L8 30.2C6 29.6 5 28.4 5 26.5z"/><circle cx="20.6" cy="19.6" r="1.7" fill="var(--ground)"/><circle cx="7.6" cy="27.4" r="1.1" fill="var(--ground)"/></svg>
+        <p class="colophon__mark">Colby<b>Major</b>Guide</p>
+      </div>
+      <p class="spec" style="margin-top:var(--space-xs)">Waterville, Maine</p>
+    </div>
+    <div>
+      <p>Charted from the Colby College course catalogue, department and program requirements, read on 27&nbsp;August&nbsp;2026. Course numbers, credit counts and exclusion rules are quoted from those pages. Grouping the requirements into four-year stages is this chart&rsquo;s reading of them, not the registrar&rsquo;s.</p>
+      <p>Requirements change between catalogue years, and several programs are mid-transition by class year. Confirm anything you are about to register for against <a href="https://www.colby.edu/academics/course-catalogue/department-and-program-requirements/">the catalogue</a> and your advisor.</p>
+      <div class="disclaimer">
+        <p><b>This is an unofficial student project.</b> It is not affiliated with, endorsed by, or produced by Colby College, and it is not an authoritative source for degree requirements. <b>The Colby wordmark and Colby Blue are the College&rsquo;s trademarks</b>, used here to identify the subject of the guide, not to suggest the College made or approved it. The mule beside this notice is an original drawing for this page, not the College&rsquo;s athletics mark.</p>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script src="data.js"></script>
+<script src="map.js"></script>
+</body>
+</html>
