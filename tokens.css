@@ -1,0 +1,66 @@
+/* ColbyMajorGuide design tokens — portable export.
+ * Colby Blue (#002169, PMS 280 C) on white, per the College's identity guidance that
+ * Colby Blue always sits on a white ground. Colby Blue doubles as the selection signal,
+ * so the three academic-division hues are deliberately kept off its hue angle.
+ *
+ * Contrast verified (WCAG 2.1, OKLCH -> linear sRGB), all against --ground:
+ *   --ink 15.8:1 · --ink-2 7.9:1 · --ink-3 6.4:1 · --colby 14.5:1
+ *   --terr-sci 6.9:1 · --terr-soc 7.4:1 · --terr-hum 7.8:1 · --rule-2 4.2:1
+ *   each division colour on its own wash: 6.3-7.0:1
+ *
+ * index.html inlines these so the page works as a single file offline; this copy exists
+ * so the system can travel to another project.
+ */
+
+:root {
+  --font-sign: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-code: "Azeret Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Colby Blue #002169 (PMS 280 C), the College's primary mark colour, which its
+     identity guidance always sets on white. Everything else is tuned around it. */
+  --colby:       oklch(28.4% 0.132 262);
+
+  /* paper */
+  --ground:      oklch(99.2% 0.002 255);
+  --ground-2:    oklch(96.5% 0.006 255);
+  --ground-3:    oklch(93.5% 0.010 255);
+  --graticule:   oklch(92.5% 0.012 255);
+  --rule:        oklch(88%   0.014 255);
+  --rule-2:      oklch(58%   0.035 258);
+  --edge:        oklch(72%   0.030 255);
+
+  /* ink ramp, tinted toward Colby Blue */
+  --ink:         oklch(25%   0.085 265);
+  --ink-2:       oklch(43%   0.045 262);
+  --ink-3:       oklch(48%   0.032 260);
+
+  /* selection is Colby Blue itself: the brand colour means "this one" */
+  --signal:      var(--colby);
+  --signal-deep: oklch(84%   0.075 262);
+  --signal-wash: oklch(92%   0.050 264);
+
+  /* three territories, pushed off Colby Blue's hue so selection never reads as a division */
+  --terr-sci:      oklch(45% 0.105 228);
+  --terr-soc:      oklch(45% 0.100  70);
+  --terr-hum:      oklch(45% 0.140  25);
+  --terr-sci-wash: oklch(96% 0.026 228);
+  --terr-soc-wash: oklch(96% 0.030  70);
+  --terr-hum-wash: oklch(96% 0.028  25);
+
+  --space-3xs: 0.125rem; --space-2xs: 0.25rem; --space-xs: 0.5rem;
+  --space-sm: 0.75rem;   --space-md: 1rem;     --space-lg: 1.5rem;
+  --space-xl: 2.5rem;    --space-2xl: 4rem;    --space-3xl: 6rem;
+
+  /* 1.28 modular scale */
+  --text-xs:  0.75rem;   --text-sm: 0.8125rem; --text-md: 0.9375rem;
+  --text-lg:  1.1875rem; --text-xl: 1.5rem;    --text-2xl: 1.95rem;
+  --text-3xl: 2.5rem;
+  --text-display: clamp(2.2rem, 5.1vw, 4.35rem);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:  cubic-bezier(0.7, 0, 0.84, 0);
+  --dur-micro: 110ms; --dur-short: 200ms; --dur-long: 420ms;
+
+  --gutter: clamp(1.1rem, 3.6vw, 3.5rem);
+  --z-base: 1; --z-raised: 10; --z-sticky: 200; --z-nav: 300;
+}
