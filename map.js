@@ -6,8 +6,8 @@
   'use strict';
 
   var SVGNS = 'http://www.w3.org/2000/svg';
-  var VW = 1600, VH = 1000;
-  var PAD_X = 46, PAD_Y = 56;
+  var VW = 1600, VH = 1150;
+  var PAD_X = 46, PAD_Y = 66;
   var Y_SPREAD = 1.10;
   var FS = 19;                 /* label size in viewBox units */
   var CHAR_W = FS * 0.46;      /* Archivo at wdth 84 */
@@ -18,6 +18,7 @@
   var find = document.getElementById('find');
   var resetBtn = document.getElementById('reset');
   var terrBtns = Array.prototype.slice.call(document.querySelectorAll('.terr-btn[data-div]'));
+  var zoomNote = document.getElementById('zoom-note');
 
   var byId = {};
   PROGRAMS.forEach(function (p) { byId[p.id] = p; });
@@ -66,6 +67,8 @@
   var KIND_SCALE = { major: 1, conc: 0.86, joint: 0.9, minor: 0.8 };
   nodes.forEach(function (n) {
     n.r = (7 + Math.sqrt(n.deg) * 2.4) * (KIND_SCALE[n.kind] || 1);
+    n.text = plainText(n.prog.short);
+    n.tw = n.text.length * CHAR_W;          /* needed during layout, not just after */
   });
 
   /* ---------- deterministic relaxation ---------- */
@@ -79,8 +82,10 @@
           n = nodes[i]; m = nodes[j];
           dx = m.cx - n.cx; dy = m.cy - n.cy;
           d = Math.sqrt(dx * dx + dy * dy) || 0.01;
-          var tight = (n.kind === 'minor' || m.kind === 'minor') ? 0.68 : 1;
-          var minD = ((n.div === m.div ? 116 : 84) + (n.r + m.r) * 0.55) * tight;
+          var tight = (n.kind === 'minor' || m.kind === 'minor') ? 0.74 : 1;
+          /* a node is really a disc plus the name beside it, so long names push harder */
+          var label = (n.tw + m.tw) * 0.20;
+          var minD = ((n.div === m.div ? 128 : 92) + (n.r + m.r) * 0.55 + label) * tight;
           if (d < minD) {
             push = ((minD - d) / d) * 0.5 * alpha;
             n.cx -= dx * push; n.cy -= dy * push;
@@ -117,7 +122,7 @@
       }
     }
   }
-  relax(540);
+  relax(620);
 
   /* ---------- territories: a smoothed hull around each division's cloud ---------- */
   function hullOf(pts) {
@@ -180,9 +185,13 @@
     /* the name sits just above its region, clear of the node cloud inside it */
     var minX = Math.min.apply(null, h.map(function (q) { return q.x; }));
     var minY = Math.min.apply(null, h.map(function (q) { return q.y; }));
+    /* the social sciences band is only 16% of the width; a fixed 25px name overran it
+       into the humanities one. Size each name to the band that owns it. */
+    var bandW = (b.x1 - b.x0) * VW;
+    var size = Math.max(15, Math.min(26, bandW / (b.label.length * 0.78)));
     return {
-      div: b.div, label: b.label, d: smoothClosedPath(h),
-      lx: Math.max(minX, b.x0 * VW), ly: Math.max(minY - 18, FRAME_M + 36)
+      div: b.div, label: b.label, d: smoothClosedPath(h), size: size,
+      lx: Math.max(minX, b.x0 * VW), ly: Math.max(minY - 16, FRAME_M + size + 14)
     };
   });
 
@@ -191,8 +200,6 @@
     var band = bandById[n.div];
     var mid = (band.x0 + band.x1) / 2 * VW;
     n.side = n.cx > mid ? -1 : 1;
-    n.text = plainText(n.prog.short);
-    n.tw = n.text.length * CHAR_W;
   });
 
   function rectOf(n, cand) {
@@ -231,9 +238,13 @@
 
     var best = null, bestScore = Infinity;
     slots.forEach(function (cand, ci) {
-      var r = rectOf(n, cand), score = ci * 60;
-      for (var i = 0; i < placed.length; i++) score += overlap(r, placed[i]) * 3;
-      for (var j = 0; j < discBoxes.length; j++) score += overlap(r, discBoxes[j]) * 5;
+      var r = rectOf(n, cand), score = ci * 30;
+      /* distance from the dot is the thing that makes a label look orphaned, so it
+         is scored heavily: a slightly overlapped label near its node beats a clean
+         one floating in space */
+      score += (Math.abs(cand.dx) + Math.abs(cand.dy)) * 2.2;
+      for (var i = 0; i < placed.length; i++) score += overlap(r, placed[i]) * 9;
+      for (var j = 0; j < discBoxes.length; j++) score += overlap(r, discBoxes[j]) * 12;
       if (r.x0 < 6) score += (6 - r.x0) * 40;
       if (r.x1 > VW - 6) score += (r.x1 - (VW - 6)) * 40;
       if (r.y0 < 6) score += (6 - r.y0) * 40;
@@ -286,7 +297,8 @@
   territories.forEach(function (t) {
     var path = el('path', { 'class': 'territory', 'data-div': t.div, d: t.d });
     gTerr.appendChild(path);
-    var name = el('text', { 'class': 'terr-name', 'data-div': t.div, x: t.lx, y: t.ly });
+    var name = el('text', { 'class': 'terr-name', 'data-div': t.div, x: t.lx, y: t.ly,
+                            'font-size': t.size.toFixed(1) });
     name.textContent = t.label;
     gTerr.appendChild(name);
     terrEls[t.div] = [path, name];
@@ -540,9 +552,12 @@
   var pointers = new Map();
   var dragged = false, pinch = null, downDot = null;
 
+  var LABEL_ZOOM = 1.45;     /* below this, 39 minor names are just noise */
   function applyView() {
     root.setAttribute('transform',
       'translate(' + view.x.toFixed(2) + ' ' + view.y.toFixed(2) + ') scale(' + view.k.toFixed(4) + ')');
+    svg.classList.toggle('is-close', view.k >= LABEL_ZOOM);
+    if (zoomNote) zoomNote.hidden = view.k >= LABEL_ZOOM;
   }
   function toSvg(clientX, clientY) {
     var r = svg.getBoundingClientRect();
@@ -762,6 +777,18 @@
       view.x = 0; view.y = 0;
     }
     applyView();
+  }
+
+  /* The entrance uses animation-fill-mode: backwards, which pins every node at
+     opacity 0 until its animation plays - and animations do not play in a background
+     tab. Guarantee the chart becomes visible regardless. */
+  function settle() { svg.classList.add('entered'); }
+  if (document.hidden || reduceMotion.matches) settle();
+  else {
+    setTimeout(settle, 1700);                       /* longest delay + duration + slack */
+    document.addEventListener('visibilitychange', function once() {
+      if (document.hidden) { settle(); document.removeEventListener('visibilitychange', once); }
+    });
   }
 
   /* ---------- go ---------- */
