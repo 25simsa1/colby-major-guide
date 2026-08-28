@@ -24,8 +24,38 @@ Colby Communications about the wordmark.
 | `tokens.css` | The design tokens, exported so the system can travel to another project. |
 | `colby-wordmark.png` | The Colby wordmark, keyed to transparency and normalised to #002169. |
 | `flow.js` | The masthead's WebGL noise field. Falls back to a CSS gradient without WebGL. |
+| `verify.mjs` | Data integrity check. `node verify.mjs` — exits non-zero on any problem. |
 
 No build step, no dependencies, no server code. Open `index.html` and it runs.
+
+## Checking the data
+
+```bash
+node verify.mjs
+```
+
+Confirms every link resolves to a real program, every required field is present, clusters
+match their division, minors point at a parent that exists in the same division (or declare
+`parent: null` if they are genuinely standalone), nothing is orphaned, and the
+`<span class="code">` markup around course numbers is intact. **Run it after any edit to
+`data.js`** — the whole worth of this chart is that its numbers are real.
+
+## Sharing a program
+
+The URL carries the selection: `?p=englit` opens straight to English. Selecting a program
+updates the address bar, so any route can be sent to someone.
+
+## "Courses I've taken"
+
+The tray above the chart lets a student search the 375 course codes named across all the
+routes and drag the ones they have finished into their list (clicking or pressing Enter does
+the same, since HTML5 drag-and-drop does not work on touch or by keyboard). The list is kept
+in `localStorage` on that device only — nothing is sent anywhere.
+
+Programs then show progress: an arc on the node, a count in the index, a tick beside each
+finished course in the route. The wording is deliberately **"courses named on this route"**
+rather than "requirements": the routes name specific courses but also say things like "four
+electives at the 200 level", which no code list can capture.
 
 ## Running it locally
 

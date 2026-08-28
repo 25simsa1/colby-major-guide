@@ -572,6 +572,94 @@ p { margin: 0; text-wrap: pretty; }
 .disclaimer p { color: var(--ink-2); max-width: 74ch; }
 .disclaimer b { color: var(--ink); font-weight: 700; }
 
+/* ======================= courses I have taken =======================
+ * Codes are pulled out of the route prose, filtered down to real courses (a bare
+ * "300" in "at the 300 level" is not one), and matched against what the student
+ * says they have finished. */
+.taken { border-bottom: 1px solid var(--rule); background: var(--ground); }
+.taken__toggle {
+  font: 600 var(--text-sm)/1 var(--font-sign);
+  font-variation-settings: "wdth" 92;
+  letter-spacing: 0.02em; text-transform: uppercase; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: var(--space-xs);
+  cursor: pointer; padding: var(--space-sm) var(--gutter);
+  background: transparent; border: 0; color: var(--ink-2);
+  transition: color var(--dur-micro) var(--ease-out);
+}
+.taken__toggle:hover { color: var(--colby); }
+.taken__toggle::before {
+  content: "+"; font-family: var(--font-code); font-size: 1rem; line-height: 1;
+  color: var(--colby); width: 0.8em; text-align: center;
+}
+.taken__toggle[aria-expanded="true"]::before { content: "\2212"; }
+.taken__n {
+  font-family: var(--font-code); font-size: var(--text-xs); font-weight: 700;
+  min-width: 1.5em; text-align: center; padding: 0.1rem 0.3rem; border-radius: 2px;
+  background: var(--ground-3); color: var(--ink-3);
+}
+.taken__n[data-any="yes"] { background: var(--colby); color: var(--ground); }
+
+.taken__panel {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-lg) var(--space-2xl);
+  padding: 0 var(--gutter) var(--space-lg);
+}
+.taken__panel[hidden] { display: none; }
+@media (max-width: 820px) { .taken__panel { grid-template-columns: minmax(0, 1fr); } }
+.taken__col { min-width: 0; }
+.taken__label {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm);
+  font-size: var(--text-xs); letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: var(--space-xs);
+}
+.taken__find { max-width: none; width: 100%; }
+.taken__note { font-size: var(--text-sm); color: var(--ink-3); margin-top: var(--space-xs); }
+.taken__clear {
+  font: 600 var(--text-xs)/1 var(--font-sign); letter-spacing: 0.05em; text-transform: uppercase;
+  cursor: pointer; background: transparent; border: 0; padding: 0.2rem 0;
+  color: var(--terr-hum); border-bottom: 1px solid currentColor;
+}
+.taken__clear:hover { color: var(--ink); }
+
+.chips { list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-2xs); margin: var(--space-xs) 0 0; padding: 0; }
+.chips--tray {
+  min-height: 4.6rem; align-content: flex-start;
+  border: 1px dashed var(--rule-2); border-radius: 2px; padding: var(--space-xs);
+  transition: border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+}
+.chips--tray.is-target { border-color: var(--colby); border-style: solid; background: var(--signal-wash); }
+
+.chip-course {
+  font: 500 var(--text-sm)/1 var(--font-code); font-variant-numeric: tabular-nums;
+  display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap;
+  padding: 0.32rem 0.5rem; border-radius: 2px; cursor: grab;
+  border: 1px solid var(--rule-2); background: var(--ground-2); color: var(--ink);
+  transition: border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+}
+.chip-course:hover { border-color: var(--colby); }
+.chip-course:active { cursor: grabbing; }
+.chip-course.is-dragging { opacity: 0.4; }
+.chip-course small { font-family: var(--font-sign); font-size: 0.68rem; color: var(--ink-3); }
+.chip-course[data-in="yes"] { opacity: 0.45; cursor: default; }
+.chips--tray .chip-course { background: var(--colby); border-color: var(--colby); color: var(--ground); }
+.chips--tray .chip-course small { color: color-mix(in srgb, var(--ground) 75%, transparent); }
+.chips--tray .chip-course::after { content: "\00d7"; font-size: 0.9rem; line-height: 1; opacity: 0.8; }
+.chips__empty { font-size: var(--text-sm); color: var(--ink-3); padding: 0.3rem 0; }
+
+/* progress the student has made, on the chart and in the index */
+.dot__prog { fill: none; stroke: var(--colby); stroke-width: 3.4; stroke-linecap: butt; opacity: 0.9; }
+.entry__prog {
+  font-family: var(--font-code); font-size: var(--text-xs); color: var(--colby);
+  font-weight: 700; white-space: nowrap;
+}
+.code[data-done="yes"] {
+  background: var(--colby); color: var(--ground);
+}
+.code[data-done="yes"]::after { content: "\00a0\2713"; }
+.pgm__progress {
+  margin-top: var(--space-sm); font-size: var(--text-sm); color: var(--colby); font-weight: 600;
+}
+
 /* ======================= masthead flow =======================
  * A WebGL noise field sits behind the header and title only. The chart below is
  * fine hairlines and 101 labels, so it keeps a still, light ground.
@@ -808,6 +896,29 @@ p { margin: 0; text-wrap: pretty; }
       <input class="find" id="find" type="search" placeholder="Search a program or course code" autocomplete="off">
       <button class="ghost-btn" type="button" id="reset">Reset</button>
       <p class="spec controls__hint">Drag to pan &middot; pinch or ctrl-scroll to zoom &middot; click a program for its route</p>
+    </div>
+
+
+    <div class="taken">
+      <button class="taken__toggle" id="taken-toggle" type="button" aria-expanded="false" aria-controls="taken-panel">
+        Courses I&rsquo;ve taken <span class="taken__n" id="taken-n">0</span>
+      </button>
+      <div class="taken__panel" id="taken-panel" hidden>
+        <div class="taken__col">
+          <label class="taken__label" for="course-find">Find a course you have finished</label>
+          <input class="find taken__find" id="course-find" type="search" autocomplete="off"
+                 placeholder="e.g. CS 231, MA 253, BI 163">
+          <ul class="chips" id="course-results" aria-label="Matching courses"></ul>
+        </div>
+        <div class="taken__col taken__col--tray">
+          <p class="taken__label">
+            Drag them here, or press Enter
+            <button class="taken__clear" id="taken-clear" type="button" hidden>Clear all</button>
+          </p>
+          <ul class="chips chips--tray" id="taken-tray" aria-label="Courses you have taken"></ul>
+          <p class="taken__note" id="taken-note">Nothing added yet. Your list stays on this device.</p>
+        </div>
+      </div>
     </div>
 
     <div class="stage">
