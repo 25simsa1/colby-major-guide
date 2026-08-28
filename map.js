@@ -567,12 +567,22 @@
       y: (clientY - r.top - (r.height - VH * s) / 2) / s
     };
   }
+  /* You should never be able to fling the chart somewhere you cannot find it: at least
+     this much of the plate stays on screen whatever you do. */
+  var KEEP = 0.3;
+  function clampView() {
+    var w = VW * view.k, h = VH * view.k;
+    view.x = Math.min(VW * (1 - KEEP), Math.max(VW * KEEP - w, view.x));
+    view.y = Math.min(VH * (1 - KEEP), Math.max(VH * KEEP - h, view.y));
+  }
+
   function zoomAbout(px, py, factor) {
     var k2 = Math.min(4, Math.max(0.55, view.k * factor));
     var ratio = k2 / view.k;
     view.x = px * (1 - ratio) + view.x * ratio;
     view.y = py * (1 - ratio) + view.y * ratio;
     view.k = k2;
+    clampView();
     applyView();
   }
 
@@ -611,9 +621,15 @@
       dragged = true;
       return;
     }
-    var dx = (now.x - prev.x) * view.k, dy = (now.y - prev.y) * view.k;
+    /* Two bugs lived here. `prev` was never advanced outside the pinch branch, so every
+       move re-applied the whole distance from the press and the pan ran away. And the
+       delta was scaled by view.k: for translate(t) scale(k), holding content under the
+       cursor needs t += (p1 - p0) with no k factor at all. */
+    pointers.set(ev.pointerId, now);
+    var dx = now.x - prev.x, dy = now.y - prev.y;
     if (Math.abs(dx) + Math.abs(dy) > 1.5) dragged = true;
     view.x += dx; view.y += dy;
+    clampView();
     applyView();
   });
 
