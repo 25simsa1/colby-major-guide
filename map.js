@@ -20,10 +20,13 @@
   var terrBtns = Array.prototype.slice.call(document.querySelectorAll('.terr-btn[data-div]'));
   var zoomNote = document.getElementById('zoom-note');
 
-  var byId = {};
+  /* Object.create(null), not {}: a plain object inherits constructor, toString and
+     friends, so byId['constructor'] was truthy and ?p=constructor walked straight
+     past the "is this a real program" guard into a TypeError. */
+  var byId = Object.create(null);
   PROGRAMS.forEach(function (p) { byId[p.id] = p; });
 
-  var bandById = {};
+  var bandById = Object.create(null);
   BANDS.forEach(function (b) { bandById[b.div] = b; });
 
   function plainText(html) {
@@ -429,8 +432,8 @@
     return map;
   }
 
-  var COURSE_OWNERS = {};          /* code -> { id: true } */
-  var PROGRAM_COURSES = {};        /* program id -> [code] */
+  var COURSE_OWNERS = Object.create(null);    /* code -> { id: true } */
+  var PROGRAM_COURSES = Object.create(null);  /* program id -> [code] */
   PROGRAMS.forEach(function (p) {
     var seen = {};
     stageCodeMap(p).forEach(function (row) {
@@ -438,7 +441,7 @@
         if (!codes) return;
         codes.forEach(function (c) {
           seen[c] = true;
-          (COURSE_OWNERS[c] || (COURSE_OWNERS[c] = {}))[p.id] = true;
+          (COURSE_OWNERS[c] || (COURSE_OWNERS[c] = Object.create(null)))[p.id] = true;
         });
       });
     });
@@ -447,7 +450,8 @@
   var ALL_COURSES = Object.keys(COURSE_OWNERS).sort();
 
   var STORE = 'colbymajorguide.taken';
-  var taken = {};
+  var taken = Object.create(null);
+  var listeners = [];            /* plan.js subscribes here */
   try {
     var saved = JSON.parse(localStorage.getItem(STORE) || '[]');
     if (Array.isArray(saved)) saved.forEach(function (c) { if (COURSE_OWNERS[c]) taken[c] = true; });
@@ -540,6 +544,7 @@
   function afterChange() {
     persist(); renderTray(); renderResults(); paintProgress(); renderIndex();
     if (selected) renderReadout(selected);
+    listeners.forEach(function (fn) { try { fn(); } catch (e) {} });
   }
 
   tToggle.addEventListener('click', function () {
@@ -567,7 +572,7 @@
     var b = ev.target.closest && ev.target.closest('.chip-course');
     if (b) removeCourse(b.dataset.code);
   });
-  tClear.addEventListener('click', function () { taken = {}; afterChange(); });
+  tClear.addEventListener('click', function () { taken = Object.create(null); afterChange(); });
 
   /* drag is the asked-for gesture; click and Enter above do the same job for touch
      and keyboard, which HTML5 drag-and-drop does not serve */
@@ -1101,6 +1106,23 @@
   paint();
   paintProgress();
   renderIndex();
+
+  /* A small surface for plan.js, which audits a declared course of study against
+     the same taken-courses list this tray writes. taken is reassigned on "clear all",
+     so it is reached through accessors rather than handed out by reference. */
+  window.CMG = {
+    programs: PROGRAMS,
+    byId: byId,
+    exclGroups: typeof EXCL_GROUPS === 'object' ? EXCL_GROUPS : {},
+    coursesOf: function (id) { return (PROGRAM_COURSES[id] || []).slice(); },
+    stageCodes: stageCodeMap,
+    isTaken: function (c) { return !!taken[c]; },
+    takenCount: takenCount,
+    add: addCourse,
+    remove: removeCourse,
+    focus: function (id) { if (byId[id]) select(id, true); },
+    onChange: function (fn) { if (typeof fn === 'function') listeners.push(fn); }
+  };
 
   /* ?p=<id> opens straight to a program */
   (function openFromUrl() {
