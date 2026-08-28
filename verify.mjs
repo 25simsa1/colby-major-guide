@@ -1,4 +1,4 @@
-/* ColbyMajorGuide — data integrity check.
+/* ColbyMajorGuide: data integrity check.
  *
  *   node verify.mjs
  *
@@ -121,4 +121,4 @@ if (errors.length) {
   for (const e of errors) console.error(`  x ${e}`);
   process.exit(1);
 }
-console.log('\nok — data is consistent');
+console.log('\nok, data is consistent');

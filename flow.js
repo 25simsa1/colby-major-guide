@@ -1,4 +1,4 @@
-/* ColbyMajorGuide — masthead flow.
+/* ColbyMajorGuide: masthead flow.
  *
  * A domain-warped fractal-noise field in Colby Blue, rendered on the GPU. It reads
  * like ink moving through water without simulating any actual fluid, which keeps it
@@ -113,7 +113,7 @@
   var uT = gl.getUniformLocation(prog, 'u_t');
 
   /* the field is low-frequency, so it survives being rendered well under device
-     resolution — which is most of the performance story on a retina laptop */
+     resolution, which is most of the performance story on a retina laptop */
   var SCALE = 0.55, MAX_DPR = 1.5;
 
   function resize() {

@@ -1,4 +1,4 @@
-/* ColbyMajorGuide — program data
+/* ColbyMajorGuide: program data
  * Source: Colby College course catalogue, "Department and Program Requirements",
  * read 27 August 2026. Course numbers and exclusion rules are quoted from those pages.
  * The four-year staging is this guide's reading of the requirements, not the registrar's.
@@ -7,7 +7,7 @@
  * div:     sci (natural sciences & maths) | soc (social sciences) | hum (humanities)
  * cluster: layout anchor on the map
  * links:   programs joined by a shared required course, a joint degree, or a named
- *          substitution — never by mere topical resemblance.
+ *          substitution, never by mere topical resemblance.
  */
 
 const CLUSTERS = {
@@ -129,7 +129,7 @@ const PROGRAMS = [
     { when: 'Year 4', what: 'One topics course in mathematics numbered 400 or above, excluding <span class="code">484</span>.' }
   ],
   rules: [
-    '<span class="code">PS 214/215</span> or <span class="code">EC 293</span>/<span class="code">393</span> at C&minus; or better substitutes for <span class="code">SC 212</span> &mdash; take one more mathematics course instead.',
+    '<span class="code">PS 214/215</span> or <span class="code">EC 293</span>/<span class="code">393</span> at C&minus; or better substitutes for <span class="code">SC 212</span>: take one more mathematics course instead.',
     'Finish <span class="code">MA 274</span> before the end of second year.'
   ],
   links: ['math', 'stat', 'cs', 'econ', 'psy']
@@ -323,7 +323,7 @@ const PROGRAMS = [
   ],
   rules: [
     '<b>You may not double major</b> in biology with a neuroscience concentration and psychology: neuroscience.',
-    'The psychology course list is updated as new courses appear &mdash; check with your advisor rather than the printed list.'
+    'The psychology course list is updated as new courses appear. Check with your advisor rather than the printed list.'
   ],
   links: ['bio', 'psy', 'psyneuro', 'chem']
 },
@@ -339,7 +339,7 @@ const PROGRAMS = [
     { when: 'Year 4', what: 'Two 300-level-or-above computer science electives from <span class="code">341</span>/<span class="code">441</span>, <span class="code">343</span>/<span class="code">443</span>, <span class="code">346</span>/<span class="code">446</span>.' }
   ],
   rules: [
-    '<b>One computing major only</b> &mdash; this excludes CS, CS with AI, data science, computational psychology, environmental computation and both interdisciplinary-computation arts majors.',
+    '<b>One computing major only</b>. This excludes CS, CS with AI, data science, computational psychology, environmental computation and both interdisciplinary-computation arts majors.',
     'Courses required for this major may not be taken satisfactory/unsatisfactory.'
   ],
   links: ['bio', 'cs', 'ds', 'stat', 'biocmb', 'math']
@@ -374,7 +374,7 @@ const PROGRAMS = [
     { when: 'Year 4', what: '<span class="code">ES 494</span> Environmental Science Research Experience or Bigelow Semester independent research, plus <span class="code">ES 401</span>/<span class="code">402</span> Colloquium across the year.' }
   ],
   rules: [
-    '<b>One Environmental Studies major only</b> &mdash; policy, science and computation are mutually exclusive.',
+    '<b>One Environmental Studies major only</b>. Policy, science and computation are mutually exclusive.',
     'You cannot hold both this and the chemistry: environmental science concentration.',
     'Four electives at 200+, one at 300 level, one with a lab, two of them <span class="code">ES</span> courses.',
     'Up to two courses may come from an approved semester-long off-campus program.',
@@ -395,7 +395,7 @@ const PROGRAMS = [
   ],
   rules: [
     '<b>Courses counted in one block cannot be counted in another.</b> A 200-level ES foundation course cannot also be an application course.',
-    'One Environmental Studies major only, and one computing major only &mdash; this sits in both exclusion sets.',
+    'One Environmental Studies major only, and one computing major only. This sits in both exclusion sets.',
     'An AP score of 4 or 5 exempts <span class="code">ES 118</span> and frees a slot.',
     'Recommended application groupings: conservation and resources, ecosystem ecology, energy and climate, environmental justice, public health, water resources.'
   ],
@@ -507,7 +507,7 @@ const PROGRAMS = [
   ],
   rules: [
     '<b>Every required course must be taken at Colby</b>, including the 100-level ones, methods, the comparative course and the seminar.',
-    'The methods requirement can be met with <span class="code">PS 214</span> and <span class="code">215</span> or <span class="code">SO 271</span> &mdash; but those do not count toward the 10 courses.',
+    'The methods requirement can be met with <span class="code">PS 214</span> and <span class="code">215</span> or <span class="code">SO 271</span>, but those do not count toward the 10 courses.',
     'A 5 on the AP U.S. Government exam lets you substitute a 200- or 300-level American politics course for <span class="code">GO 111</span>.',
     'Independent studies do not count toward the ten. Only the required introductory courses count at the 100 level.',
     'At most two transferred courses count; up to five for transfer students, excluding the seminar.'
@@ -678,7 +678,7 @@ const PROGRAMS = [
     { when: 'Year 4', what: '<span class="code">EN 493</span>, the senior seminar.' }
   ],
   rules: [
-    '<b>Distribution: one P, two E, two D, two C</b> &mdash; and a single course may satisfy at most two of them.',
+    '<b>Distribution: one P, two E, two D, two C</b>, and a single course may satisfy at most two of them.',
     'All cross-listed courses count only in the elective category.',
     'The creative writing minor is only open to students whose major is not English. English majors take the concentration instead.'
   ],
@@ -930,7 +930,7 @@ const PROGRAMS = [
     'The theory placement exam cannot be failed; it routes you to section A or B.',
     'Opting out of <span class="code">MU 181</span> does not grant credit for it.',
     'Both semesters of applied lessons must be on the same instrument and taken for credit.',
-    '<b>One Music Department major only</b> &mdash; music or music&ndash;interdisciplinary computation.',
+    '<b>One Music Department major only</b>: music or music&ndash;interdisciplinary computation.',
     'The College does not subsidise lesson costs for minors.'
   ],
   links: ['musicic', 'ptd', 'cinema', 'aas', 'eal', 'edcert', 'arthist']
@@ -948,7 +948,7 @@ const PROGRAMS = [
   ],
   rules: [
     '<b>One computing major only</b>, and <b>one Music Department major only</b>. This sits in both exclusion sets.',
-    'Only <span class="code">CS 15X/16X</span>, <span class="code">231</span> and <span class="code">251/252</span> may double-count with a CS major or minor &mdash; which you cannot hold anyway.',
+    'Only <span class="code">CS 15X/16X</span>, <span class="code">231</span> and <span class="code">251/252</span> may double-count with a CS major or minor, which you cannot hold anyway.',
     'The retention point scale covers courses in both departments.'
   ],
   links: ['music', 'cs', 'ptdic', 'cinema']
@@ -1131,7 +1131,7 @@ const PROGRAMS = [
     { when: 'Year 4', what: 'A 400-level Chinese course, or an approved course on Chinese literature or culture at 200+.' }
   ],
   rules: [
-    '<b>The major requirements are not printed on the catalogue page</b> as of this reading &mdash; confirm the course list with the department directly.',
+    '<b>The major requirements are not printed on the catalogue page</b> as of this reading. Confirm the course list with the department directly.',
     'The minor is six courses: five in language at <span class="code">CN 126</span> or above, plus one 400-level course or an approved 200+ literature or culture course.',
     'Students in the Class of 2027 and beyond may choose this instead of the EALC major.'
   ],
@@ -1149,7 +1149,7 @@ const PROGRAMS = [
     { when: 'Year 4', what: 'A 400-level Japanese course, or an approved course on Japanese literature or culture at 200+.' }
   ],
   rules: [
-    '<b>The major requirements are not printed on the catalogue page</b> as of this reading &mdash; confirm with the department.',
+    '<b>The major requirements are not printed on the catalogue page</b> as of this reading. Confirm with the department.',
     'The minor is six courses: five in language at <span class="code">JA 126</span> or above, plus one 400-level or approved 200+ literature or culture course.'
   ],
   links: ['eal', 'chinese', 'cinema', 'global']
@@ -1236,7 +1236,7 @@ const PROGRAMS = [
   blurb: 'Experiences, expressions and conceptions of Jewishness, past and present. Three primary themes run through the curriculum: Ideas and Texts, Lived Jewishness, and Community Impact.',
   path: [
     { when: 'Year 1', what: '<span class="code">JS 181</span> and <span class="code">JS 182</span>.' },
-    { when: 'Year 2', what: 'At least one semester of <span class="code">JS 123</span> Beit Midrash &mdash; Jewish Ideas Lab, a one-credit credit/no-credit course. It must be done before senior year.' },
+    { when: 'Year 2', what: 'At least one semester of <span class="code">JS 123</span> Beit Midrash: Jewish Ideas Lab, a one-credit credit/no-credit course. It must be done before senior year.' },
     { when: 'Year 3', what: 'One course in each of the three themes, and at least two 300-level research seminars. A single course can count for a theme and a seminar at once.' },
     { when: 'Year 4', what: '<span class="code">JS 423</span> Capstone: Designing the Jewish Ideas Lab, across the whole senior year at two credits per term, credit/no-credit.' }
   ],
@@ -1374,7 +1374,7 @@ const PROGRAMS = [
     { when: 'Year 4', what: 'Finish the four Earth sciences courses numbered <span class="code">228</span> and above.' },
   ],
   rules: [
-    'The programme is <b>tailored individually</b> &mdash; elect courses in consultation with a department faculty member.',
+    'The programme is <b>tailored individually</b>. Elect courses in consultation with a department faculty member.',
   ],
   links: ['earth', 'chem', 'envsci']
 },
@@ -1391,7 +1391,7 @@ const PROGRAMS = [
     { when: 'Year 4', what: 'At least one of the four must be at the <span class="code">300</span> level.' },
   ],
   rules: [
-    '<b>An AP score of 4 or 5 exempts <span class="code">ES 118</span> but does not reduce the course count</b> &mdash; you take an extra 200&ndash;300 level ES course instead.',
+    '<b>An AP score of 4 or 5 exempts <span class="code">ES 118</span> but does not reduce the course count</b>. You take an extra 200&ndash;300 level ES course instead.',
     'Open to majors in any discipline.',
   ],
   links: ['envsci', 'envpol', 'envcomp', 'min-marine']
@@ -1403,9 +1403,9 @@ const PROGRAMS = [
   size: '5 courses, in one of two tracks',
   blurb: 'Run through the Colby&ndash;Bigelow Laboratory partnership. Track 2 routes you through the Sea Change semester in residence at Bigelow; Track 1 keeps you on campus.',
   path: [
-    { when: 'Year 1', what: 'Groundwork in chemistry, biology and calculus &mdash; the Sea Change semester needs one of each plus three lab sciences.' },
+    { when: 'Year 1', what: 'Groundwork in chemistry, biology and calculus. The Sea Change semester needs one of each plus three lab sciences.' },
     { when: 'Year 2', what: 'Track 1 starts with <span class="code">ES 264</span>.' },
-    { when: 'Year 3', what: 'Track 1: four courses from the marine list, among them <span class="code">BI 218</span>, <span class="code">BI 254</span>, <span class="code">ES 244</span>, <span class="code">CH 261</span>, <span class="code">ER 262</span>, <span class="code">ES 344</span>. Track 2: the Sea Change semester &mdash; <span class="code">ES 383</span>, <span class="code">BI 384</span>, <span class="code">CH 385</span> and <span class="code">ES 386</span>.' },
+    { when: 'Year 3', what: 'Track 1: four courses from the marine list, among them <span class="code">BI 218</span>, <span class="code">BI 254</span>, <span class="code">ES 244</span>, <span class="code">CH 261</span>, <span class="code">ER 262</span>, <span class="code">ES 344</span>. Track 2: the Sea Change semester: <span class="code">ES 383</span>, <span class="code">BI 384</span>, <span class="code">CH 385</span> and <span class="code">ES 386</span>.' },
     { when: 'Year 4', what: 'Track 2 finishes with one further course from the marine list.' },
   ],
   rules: [
@@ -1420,7 +1420,7 @@ const PROGRAMS = [
   id: 'min-econ', name: 'Economics', short: 'Economics minor',
   div: 'soc', cluster: 'econgov', kind: 'minor', parent: 'econ', dept: 'Economics',
   size: '6 courses, in one of two tracks',
-  blurb: 'Two tracks: one aimed at accounting and finance, one at policy. Being retired &mdash; the last cohort that can elect it is the Class of 2027.',
+  blurb: 'Two tracks: one aimed at accounting and finance, one at policy. Being retired: the last cohort that can elect it is the Class of 2027.',
   path: [
     { when: 'Year 1', what: '<span class="code">EC 133</span> Microeconomics.' },
     { when: 'Year 2', what: '<span class="code">EC 134</span> Macroeconomics. Track 1 adds <span class="code">EC 210</span> Accounting and <span class="code">EC 211</span> Finance.' },
@@ -1480,7 +1480,7 @@ const PROGRAMS = [
   path: [
     { when: 'Year 1', what: '<span class="code">ED 101</span>, previously numbered 201.' },
     { when: 'Year 2', what: 'One of <span class="code">ED 213</span>, <span class="code">215</span> or <span class="code">217</span>.' },
-    { when: 'Year 3', what: 'One practicum or internship &mdash; <span class="code">ED 351</span>, <span class="code">333</span> or <span class="code">374</span> &mdash; plus electives.' },
+    { when: 'Year 3', what: 'One practicum or internship (<span class="code">ED 351</span>, <span class="code">333</span> or <span class="code">374</span>) plus electives.' },
     { when: 'Year 4', what: '<span class="code">ED 493A</span> or <span class="code">493B</span>, plus three education electives in total.' },
   ],
   rules: [
@@ -1603,7 +1603,7 @@ const PROGRAMS = [
   id: 'min-religion', name: 'Religious Studies', short: 'Religious Studies minor',
   div: 'hum', cluster: 'thought', kind: 'minor', parent: 'religion', dept: 'Religious Studies',
   size: '6 courses',
-  blurb: 'Same three analytical frameworks as the major &mdash; Identity, Interpretation, Practice &mdash; at one course each instead of two.',
+  blurb: 'Same three analytical frameworks as the major (Identity, Interpretation, Practice) at one course each instead of two.',
   path: [
     { when: 'Year 1', what: '<span class="code">RE 128</span> Introduction to the Study of Religion.' },
     { when: 'Year 2', what: 'One 100-level course on an Eastern tradition and one on a Western tradition.' },
@@ -1624,7 +1624,7 @@ const PROGRAMS = [
   blurb: 'The major without the year-long capstone, but the Beit Midrash lab requirement stays.',
   path: [
     { when: 'Year 1', what: '<span class="code">JS 181</span> and <span class="code">JS 182</span>.' },
-    { when: 'Year 2', what: 'At least one semester of <span class="code">JS 123</span> Beit Midrash &mdash; Jewish Ideas Lab, one credit, credit/no credit.' },
+    { when: 'Year 2', what: 'At least one semester of <span class="code">JS 123</span> Beit Midrash: Jewish Ideas Lab, one credit, credit/no credit.' },
     { when: 'Year 3', what: 'At least one research seminar at the <span class="code">300</span> level.' },
     { when: 'Year 4', what: 'Finish the six.' },
   ],
@@ -1665,7 +1665,7 @@ const PROGRAMS = [
     { when: 'Year 4', what: 'Two four-credit music courses at the <span class="code">200</span> level or higher. <span class="code">MU 153</span> may count as one.' },
   ],
   rules: [
-    '<b>The College does not subsidise lesson costs for minors</b> &mdash; only for majors.',
+    '<b>The College does not subsidise lesson costs for minors</b>, only for majors.',
     'Both semesters of lessons must be on the same instrument and taken for credit.',
   ],
   links: ['music', 'musicic', 'ptd', 'cinema']
@@ -1675,7 +1675,7 @@ const PROGRAMS = [
   id: 'min-ptd', name: 'Performance, Theater &amp; Dance', short: 'PTD minor',
   div: 'hum', cluster: 'arts', kind: 'minor', parent: 'ptd', dept: 'Performance, Theater &amp; Dance',
   size: '24 credit hours',
-  blurb: 'Like the major, you design and justify your own pathway &mdash; just a shorter one.',
+  blurb: 'Like the major, you design and justify your own pathway, just a shorter one.',
   path: [
     { when: 'Year 1', what: '<span class="code">TD 124</span> Performance, Politics, and Practice.' },
     { when: 'Year 2', what: '<span class="code">TD 262</span> Collaborative Company.' },
@@ -1875,7 +1875,7 @@ const PROGRAMS = [
   id: 'indep', name: 'Independent Major', short: 'Independent Major',
   div: 'soc', cluster: 'world', kind: 'major', dept: 'Independent Major Committee',
   size: 'One third or more of the 128 credits, designed by you',
-  blurb: 'For students whose academic interests do not match an existing major. You design the course of study and defend it in a written proposal. It belongs to no division &mdash; it is charted at the crossroads because that is where it lives.',
+  blurb: 'For students whose academic interests do not match an existing major. You design the course of study and defend it in a written proposal. It belongs to no division. It is charted at the crossroads because that is where it lives.',
   path: [
     { when: 'Year 1', what: 'Take the courses that make you want this. The proposal has to argue from something real.' },
     { when: 'Year 2', what: 'Recruit one or two advisors who will carry responsibility for the program throughout. <b>An interdisciplinary major needs two, from different departments.</b>' },
@@ -1883,7 +1883,7 @@ const PROGRAMS = [
     { when: 'Year 4', what: 'Complete the approved program and its culminating work, keeping the committee informed of any change.' },
   ],
   rules: [
-    '<b>The program must total one third or more of the credit hours required for graduation</b> &mdash; roughly 43 of the 128 &mdash; balanced across lower- and upper-level courses.',
+    '<b>The program must total one third or more of the credit hours required for graduation</b>, roughly 43 of the 128, balanced across lower- and upper-level courses.',
     '<b>Written approval must be obtained by the end of your sixth semester.</b> Miss that and the route closes.',
     'Substantial changes to an approved program must go back to the committee.',
     'African American Studies names Africana Studies as a worked example, combining the Caribbean, the Americas and Africa.',

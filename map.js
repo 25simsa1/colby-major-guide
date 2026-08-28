@@ -1,4 +1,4 @@
-/* ColbyMajorGuide — chart layout, rendering and interaction.
+/* ColbyMajorGuide: chart layout, rendering and interaction.
  * Layout is deterministic: no Math.random anywhere, so the chart is identical on
  * every load and the composition can be judged rather than re-rolled. */
 
@@ -637,7 +637,7 @@
 
   /* `raise` re-parents nodes to lift their labels above the field. That removes and
      re-inserts the element under the cursor, which makes the browser fire pointerout
-     (relatedTarget null) and then pointerover again — an infinite repaint loop if it
+     (relatedTarget null) and then pointerover again, an infinite repaint loop if it
      runs on hover. So it only ever runs for an explicit selection, where the hover
      handlers are already inert. The flag is a second line of defence. */
   function paint(raise) {

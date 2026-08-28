@@ -2,15 +2,15 @@
 
 **<https://colbymajorguide.com>**
 
-Every Colby College program charted as one network — 101 programs, 397 requirement links,
-86 of them crossing a division boundary — plus the all-College requirements every student
+Every Colby College program charted as one network: 101 programs, 397 requirement links,
+86 of them crossing a division boundary, plus the all-College requirements every student
 owes whichever major they pick.
 
 **This is an unofficial student project.** It is not affiliated with, endorsed by, or
 produced by Colby College, and it is not an authoritative source for degree requirements.
 The Colby wordmark and Colby Blue are the College's trademarks, used here to identify the
 subject of the guide, not to suggest the College made or approved it. The page carries an
-"Unofficial" tag in the header and a full notice in the colophon — **keep both.** The mule
+"Unofficial" tag in the header and a full notice in the colophon. **Keep both.** The mule
 in the colophon is an original drawing made for this page, not the College's athletics mark.
 
 If this ever goes anywhere public-facing beyond a personal site, it is worth a note to
@@ -26,7 +26,7 @@ Colby Communications about the wordmark.
 | `tokens.css` | The design tokens, exported so the system can travel to another project. |
 | `colby-wordmark.png` | The Colby wordmark, keyed to transparency and normalised to #002169. |
 | `flow.js` | The masthead's WebGL noise field. Falls back to a CSS gradient without WebGL. |
-| `verify.mjs` | Data integrity check. `node verify.mjs` — exits non-zero on any problem. |
+| `verify.mjs` | Data integrity check. `node verify.mjs`, exits non-zero on any problem. |
 | `CNAME` | The custom domain. GitHub Pages reads this; deleting it drops the site back to the github.io path. |
 | `og.jpg` | The 1200×630 link-preview card. |
 
@@ -42,7 +42,7 @@ Confirms every link resolves to a real program, every required field is present,
 match their division, minors point at a parent that exists in the same division (or declare
 `parent: null` if they are genuinely standalone), nothing is orphaned, and the
 `<span class="code">` markup around course numbers is intact. **Run it after any edit to
-`data.js`** — the whole worth of this chart is that its numbers are real.
+`data.js`**. The whole worth of this chart is that its numbers are real.
 
 ## Sharing a program
 
@@ -54,7 +54,7 @@ updates the address bar, so any route can be sent to someone.
 The tray above the chart lets a student search the 375 course codes named across all the
 routes and drag the ones they have finished into their list (clicking or pressing Enter does
 the same, since HTML5 drag-and-drop does not work on touch or by keyboard). The list is kept
-in `localStorage` on that device only — nothing is sent anywhere.
+in `localStorage` on that device only, nothing is sent anywhere.
 
 Programs then show progress: an arc on the node, a count in the index, a tick beside each
 finished course in the route. The wording is deliberately **"courses named on this route"**
@@ -75,14 +75,14 @@ python -m http.server 8000
 
 It's a static site, so anything that serves files will host it. Three options, easiest first.
 
-### Netlify Drop — fastest, no account setup
+### Netlify Drop: fastest, no account setup
 
 1. Go to <https://app.netlify.com/drop>
 2. Drag the whole `ColbyMajorGuide` folder onto the page.
 3. It's live in about ten seconds at a random subdomain. Rename it under
    Site configuration → Change site name.
 
-### GitHub Pages — free, versioned, good if you'll keep editing
+### GitHub Pages: free, versioned, good if you'll keep editing
 
 ```bash
 git init
@@ -96,7 +96,7 @@ git push -u origin main
 Then in the repo: **Settings → Pages → Source: Deploy from a branch → `main` / `/ (root)` → Save.**
 Live at `https://<your-username>.github.io/colby-major-guide/` within a minute or two.
 
-### Cloudflare Pages or Vercel — if you want a custom domain later
+### Cloudflare Pages or Vercel: if you want a custom domain later
 
 Connect the GitHub repo, leave the build command empty, set the output directory to `/`.
 Both give you free HTTPS and a one-click custom domain.
@@ -105,9 +105,9 @@ Both give you free HTTPS and a one-click custom domain.
 
 Buy one (Namecheap, Cloudflare Registrar, Porkbun), then point it at your host:
 
-- **GitHub Pages** — add a `CNAME` file containing your domain, then set an `ALIAS`/`CNAME`
+- **GitHub Pages**: add a `CNAME` file containing your domain, then set an `ALIAS`/`CNAME`
   DNS record to `<your-username>.github.io`.
-- **Netlify / Cloudflare / Vercel** — add the domain in the dashboard and follow its DNS
+- **Netlify / Cloudflare / Vercel**: add the domain in the dashboard and follow its DNS
   instructions.
 
 ## Where the data came from
@@ -124,18 +124,18 @@ and your advisor.
 
 ## Editing it
 
-- **Add or change a program** — edit the `PROGRAMS` array in `data.js`. Every entry needs
+- **Add or change a program**: edit the `PROGRAMS` array in `data.js`. Every entry needs
   `id`, `name`, `short`, `div`, `cluster`, `kind`, `dept`, `size`, `blurb`, `path`, `rules`,
   `links`. Minors also take a `parent`.
 - **Links are evidence, not vibes.** Only connect two programs when they share a required
   course, form a joint degree, or one is a named substitution for the other.
-- **Layout is deterministic** — no `Math.random` anywhere — so the chart looks identical on
+- **Layout is deterministic**, with no `Math.random` anywhere, so the chart looks identical on
   every load. Change `CLUSTERS` in `data.js` to move a group; the relaxation does the rest.
 - **Colours** live in `:root` in `index.html` (and mirrored in `tokens.css`). Colby Blue
   doubles as the selection signal, so the three division hues are deliberately kept off its
   hue angle.
 - **The masthead flow** is a fragment shader in `flow.js`, deliberately confined to the
-  title band — the chart below is hairlines and 101 labels and needs a still, light ground.
+  title band. The chart below is hairlines and 101 labels and needs a still, light ground.
   A scrim over the canvas keeps white text at 8.8:1 whatever the field is doing. It renders
   a single frame under `prefers-reduced-motion`, caps at 30fps, drops to 0 when scrolled
   past or the tab is hidden, and renders at 55% of a DPR-capped buffer.
