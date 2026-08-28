@@ -1,5 +1,7 @@
 # ColbyMajorGuide
 
+**<https://colbymajorguide.com>**
+
 Every Colby College program charted as one network — 101 programs, 397 requirement links,
 86 of them crossing a division boundary — plus the all-College requirements every student
 owes whichever major they pick.
@@ -25,6 +27,8 @@ Colby Communications about the wordmark.
 | `colby-wordmark.png` | The Colby wordmark, keyed to transparency and normalised to #002169. |
 | `flow.js` | The masthead's WebGL noise field. Falls back to a CSS gradient without WebGL. |
 | `verify.mjs` | Data integrity check. `node verify.mjs` — exits non-zero on any problem. |
+| `CNAME` | The custom domain. GitHub Pages reads this; deleting it drops the site back to the github.io path. |
+| `og.jpg` | The 1200×630 link-preview card. |
 
 No build step, no dependencies, no server code. Open `index.html` and it runs.
 
