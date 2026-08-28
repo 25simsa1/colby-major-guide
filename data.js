@@ -190,7 +190,7 @@ const PROGRAMS = [
 },
 {
   id: 'astro', name: 'Astronomy', short: 'Astronomy',
-  div: 'sci', cluster: 'physical', kind: 'minor', dept: 'Physics &amp; Astronomy',
+  div: 'sci', cluster: 'physical', kind: 'minor', parent: null, dept: 'Physics &amp; Astronomy',
   size: '5 required courses plus an intro',
   blurb: 'General exposure to astronomy for students in any major. Colby is explicit that this is not the research path: that is the astrophysics concentration.',
   path: [
@@ -648,7 +648,7 @@ const PROGRAMS = [
 },
 {
   id: 'pubpol', name: 'Public Policy', short: 'Public Policy',
-  div: 'soc', cluster: 'society', kind: 'minor', dept: 'Sociology',
+  div: 'soc', cluster: 'society', kind: 'minor', parent: null, dept: 'Sociology',
   size: '7 courses',
   blurb: 'Policy origins, ethics and consequences, intended and otherwise. Built around the Bram Public Policy Lab, so several courses put students in front of real practitioners.',
   path: [
@@ -721,7 +721,7 @@ const PROGRAMS = [
 },
 {
   id: 'crw', name: 'Creative Writing', short: 'Creative Writing',
-  div: 'hum', cluster: 'letters', kind: 'minor', dept: 'English',
+  div: 'hum', cluster: 'letters', kind: 'minor', parent: null, dept: 'English',
   size: '7 courses',
   blurb: 'For students committed to imaginative writing whose major is something else. Four workshops and three literature courses, chosen to push you into unfamiliar styles.',
   path: [
@@ -991,7 +991,7 @@ const PROGRAMS = [
 },
 {
   id: 'cinema', name: 'Cinema Studies', short: 'Cinema Studies',
-  div: 'hum', cluster: 'arts', kind: 'minor', dept: 'Cinema Studies',
+  div: 'hum', cluster: 'arts', kind: 'minor', parent: null, dept: 'Cinema Studies',
   size: '6 courses',
   blurb: 'Screens of every type. Aesthetic and theoretical foundations, global history, and the relationship between how an image was made and what it can mean. Draws courses from five language departments.',
   path: [
@@ -1083,7 +1083,7 @@ const PROGRAMS = [
 },
 {
   id: 'italian', name: 'Italian Studies', short: 'Italian Studies',
-  div: 'hum', cluster: 'languages', kind: 'minor', dept: 'French &amp; Italian',
+  div: 'hum', cluster: 'languages', kind: 'minor', parent: null, dept: 'French &amp; Italian',
   size: '6 courses',
   blurb: 'Italian language and civilisation from the Middle Ages to the contemporary state. Minors are strongly encouraged to spend a semester in Italy.',
   path: [
