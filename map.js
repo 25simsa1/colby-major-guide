@@ -7,7 +7,7 @@
 
   var SVGNS = 'http://www.w3.org/2000/svg';
   var VW = 1600, VH = 1150;
-  var PAD_X = 46, PAD_Y = 66;
+  var PAD_X = 74, PAD_Y = 78;
   var Y_SPREAD = 1.10;
   var FS = 19;                 /* label size in viewBox units */
   var CHAR_W = FS * 0.46;      /* Archivo at wdth 84 */
@@ -172,16 +172,42 @@
   /* Territories stay inside their own lane and inside the plate frame, so the three
      divisions read as adjacent regions rather than overlapping blobs. */
   var FRAME_M = 10;
+
+  /* smoothClosedPath draws quadratics THROUGH edge midpoints with the hull vertices as
+     control points, so the curve never reaches a vertex - it cuts every corner, and a
+     node sitting on a corner ends up outside its own pool. Rather than guess an offset
+     big enough, grow the hull until the rendered path provably contains every member. */
+  var hitCtx = document.createElement('canvas').getContext('2d');
+  function pathHolds(dStr, members) {
+    if (typeof Path2D !== 'function') return true;      /* cannot verify, do not block */
+    var path = new Path2D(dStr);
+    for (var i = 0; i < members.length; i++) {
+      var n = members[i], rr = n.r + 5;
+      if (!hitCtx.isPointInPath(path, n.cx, n.cy)) return false;
+      for (var a = 0; a < 8; a++) {
+        var th = a * Math.PI / 4;
+        if (!hitCtx.isPointInPath(path, n.cx + Math.cos(th) * rr, n.cy + Math.sin(th) * rr)) return false;
+      }
+    }
+    return true;
+  }
+
   var territories = BANDS.map(function (b) {
-    var pts = nodes.filter(function (n) { return n.div === b.div; })
-                   .map(function (n) { return { x: n.cx, y: n.cy }; });
-    var laneLo = b.x0 * VW - 14, laneHi = b.x1 * VW + 14;
-    var h = expand(hullOf(pts), 48).map(function (q) {
+    var members = nodes.filter(function (n) { return n.div === b.div; });
+    var pts = members.map(function (n) { return { x: n.cx, y: n.cy }; });
+    var laneLo = b.x0 * VW - 20, laneHi = b.x1 * VW + 20;
+    function fence(q) {
       return {
         x: Math.min(Math.max(q.x, Math.max(laneLo, FRAME_M + 7)), Math.min(laneHi, VW - FRAME_M - 7)),
         y: Math.min(Math.max(q.y, FRAME_M + 7), VH - FRAME_M - 7)
       };
-    });
+    }
+    var base = hullOf(pts), h = null, dStr = null, grow;
+    for (grow = 54; grow <= 190; grow += 8) {
+      h = expand(base, grow).map(fence);
+      dStr = smoothClosedPath(h);
+      if (pathHolds(dStr, members)) break;
+    }
     /* the name sits just above its region, clear of the node cloud inside it */
     var minX = Math.min.apply(null, h.map(function (q) { return q.x; }));
     var minY = Math.min.apply(null, h.map(function (q) { return q.y; }));
@@ -190,7 +216,7 @@
     var bandW = (b.x1 - b.x0) * VW;
     var size = Math.max(15, Math.min(26, bandW / (b.label.length * 0.78)));
     return {
-      div: b.div, label: b.label, d: smoothClosedPath(h), size: size,
+      div: b.div, label: b.label, d: dStr, size: size, grow: grow,
       lx: Math.max(minX, b.x0 * VW), ly: Math.max(minY - 16, FRAME_M + size + 14)
     };
   });
