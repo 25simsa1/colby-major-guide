@@ -32,10 +32,13 @@ const CLUSTERS = {
 };
 
 const BANDS = [
-  /* band widths track program counts: 32 natural sciences, 18 social, 51 humanities */
-  { div: 'sci', label: 'Natural sciences', x0: 0.012, x1: 0.312 },
-  { div: 'soc', label: 'Social sciences',  x0: 0.332, x1: 0.492 },
-  { div: 'hum', label: 'Humanities',       x0: 0.512, x1: 0.988 }
+  /* Widths track program counts: 32 natural sciences, 18 social, 51 humanities.
+     The 0.045 gutters between them are load-bearing. Each pool is a hull grown
+     around its nodes until it provably contains them, so it needs room to bulge
+     past its band without touching its neighbour. */
+  { div: 'sci', label: 'Natural sciences', x0: 0.012, x1: 0.296 },
+  { div: 'soc', label: 'Social sciences',  x0: 0.341, x1: 0.492 },
+  { div: 'hum', label: 'Humanities',       x0: 0.537, x1: 0.988 }
 ];
 
 /* Mutually exclusive programs. The catalogue words the same restriction

@@ -117,9 +117,18 @@
         n.cy += (n.ay - n.cy) * 0.020 * alpha;
 
         var band = bandById[n.div];
-        var lo = band.x0 * VW + PAD_X, hi = band.x1 * VW - PAD_X;
-        if (n.cx < lo) n.cx += (lo - n.cx) * 0.55;
-        if (n.cx > hi) n.cx -= (n.cx - hi) * 0.55;
+        /* A hard clamp, not a spring. The spring pulled back 55% a pass and lost
+           to repulsion, so nodes settled outside their band and the pools had to
+           overlap to keep containing them. The inset scales with the band because
+           a flat one left the 256-unit social sciences band almost no interior. */
+        var bw = (band.x1 - band.x0) * VW;
+        /* the node's own radius counts: clamping the centre to the wall leaves a
+           22-unit hub half outside the band, and then the hull cannot wrap it
+           without crossing into the gutter */
+        var pad = Math.min(PAD_X, bw * 0.14) + n.r;
+        var lo = band.x0 * VW + pad, hi = band.x1 * VW - pad;
+        if (n.cx < lo) n.cx = lo;
+        if (n.cx > hi) n.cx = hi;
         if (n.cy < PAD_Y) n.cy += (PAD_Y - n.cy) * 0.55;
         if (n.cy > VH - PAD_Y) n.cy -= (n.cy - (VH - PAD_Y)) * 0.55;
       }
@@ -187,18 +196,28 @@
     for (var i = 0; i < members.length; i++) {
       var n = members[i], rr = n.r + 5;
       if (!hitCtx.isPointInPath(path, n.cx, n.cy)) return false;
-      for (var a = 0; a < 8; a++) {
-        var th = a * Math.PI / 4;
+      /* 24 points, not 8. Eight leaves 45 degrees between samples, and at a corner
+         the curve dips inside the rim between two passing samples: four nodes were
+         reported contained while a slice of each sat outside its own pool. */
+      for (var a = 0; a < 24; a++) {
+        var th = a * Math.PI / 12;
         if (!hitCtx.isPointInPath(path, n.cx + Math.cos(th) * rr, n.cy + Math.sin(th) * rr)) return false;
       }
     }
     return true;
   }
 
-  var territories = BANDS.map(function (b) {
+  var territories = BANDS.map(function (b, bi) {
     var members = nodes.filter(function (n) { return n.div === b.div; });
     var pts = members.map(function (n) { return { x: n.cx, y: n.cy }; });
-    var laneLo = b.x0 * VW - 20, laneHi = b.x1 * VW + 20;
+    /* A pool may bulge past its own band, but never more than halfway into the
+       gutter it shares with a neighbour, so a channel always survives between
+       them. The outer edges have nothing to collide with and stay generous. */
+    var prev = BANDS[bi - 1], next = BANDS[bi + 1], CHAN = 14;
+    var laneLo = prev ? Math.max(b.x0 * VW - 40, (prev.x1 + b.x0) / 2 * VW + CHAN)
+                      : b.x0 * VW - 40;
+    var laneHi = next ? Math.min(b.x1 * VW + 40, (b.x1 + next.x0) / 2 * VW - CHAN)
+                      : b.x1 * VW + 40;
     function fence(q) {
       return {
         x: Math.min(Math.max(q.x, Math.max(laneLo, FRAME_M + 7)), Math.min(laneHi, VW - FRAME_M - 7)),
@@ -206,7 +225,9 @@
       };
     }
     var base = hullOf(pts), h = null, dStr = null, grow;
-    for (grow = 54; grow <= 190; grow += 8) {
+    /* the ceiling can be generous now: the lane fence bounds how far a pool may
+       spread sideways, so extra growth only fills space that is already its own */
+    for (grow = 54; grow <= 340; grow += 8) {
       h = expand(base, grow).map(fence);
       dStr = smoothClosedPath(h);
       if (pathHolds(dStr, members)) break;
