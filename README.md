@@ -23,6 +23,7 @@ Colby Communications about the wordmark.
 | `map.js` | Chart layout (deterministic relaxation), rendering, and interaction. |
 | `tokens.css` | The design tokens, exported so the system can travel to another project. |
 | `colby-wordmark.png` | The Colby wordmark, keyed to transparency and normalised to #002169. |
+| `flow.js` | The masthead's WebGL noise field. Falls back to a CSS gradient without WebGL. |
 
 No build step, no dependencies, no server code. Open `index.html` and it runs.
 
@@ -99,3 +100,8 @@ and your advisor.
 - **Colours** live in `:root` in `index.html` (and mirrored in `tokens.css`). Colby Blue
   doubles as the selection signal, so the three division hues are deliberately kept off its
   hue angle.
+- **The masthead flow** is a fragment shader in `flow.js`, deliberately confined to the
+  title band — the chart below is hairlines and 101 labels and needs a still, light ground.
+  A scrim over the canvas keeps white text at 8.8:1 whatever the field is doing. It renders
+  a single frame under `prefers-reduced-motion`, caps at 30fps, drops to 0 when scrolled
+  past or the tab is hidden, and renders at 55% of a DPR-capped buffer.
