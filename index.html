@@ -665,6 +665,155 @@ p { margin: 0; text-wrap: pretty; }
   margin-top: var(--space-sm); font-size: var(--text-sm); color: var(--colby); font-weight: 600;
 }
 
+/* ======================= where you stand =======================
+ * A planning aid, not a degree audit: it matches the taken-courses list against
+ * the routes of whatever the student has declared and shows the remainder, split
+ * by whether their class year can normally register for it yet. */
+.setup { margin: var(--space-lg) 0 var(--space-xl); display: grid; gap: var(--space-md); }
+.setup__row { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr) auto; gap: var(--space-sm) var(--space-md); align-items: start; }
+.setup__label {
+  font-size: var(--text-xs); letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-3); padding-top: 0.55rem;
+}
+.setup__find { min-width: 0; }
+.setup__find .find { width: 100%; max-width: 34rem; }
+.setup__clear {
+  font: 600 var(--text-xs)/1 var(--font-sign); letter-spacing: 0.05em; text-transform: uppercase;
+  cursor: pointer; background: transparent; border: 0; padding: 0.55rem 0;
+  color: var(--ink-3); border-bottom: 1px solid currentColor; justify-self: end;
+}
+.setup__clear:hover { color: var(--terr-hum); }
+@media (max-width: 760px) {
+  .setup__row { grid-template-columns: minmax(0, 1fr); }
+  .setup__label { padding-top: 0; }
+  .setup__clear { justify-self: start; }
+}
+
+.yrs { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+.yr {
+  font: 600 var(--text-sm)/1 var(--font-sign); cursor: pointer; white-space: nowrap;
+  padding: 0.5rem 0.85rem; border-radius: 2px;
+  border: 1px solid var(--rule-2); background: var(--ground-2); color: var(--ink-2);
+  transition: border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+}
+.yr:hover { border-color: var(--colby); color: var(--ink); }
+.yr[aria-pressed="true"] { background: var(--colby); border-color: var(--colby); color: var(--ground); }
+
+.chip-pgm {
+  font: 500 var(--text-sm)/1 var(--font-sign); cursor: pointer; text-align: left;
+  display: inline-flex; align-items: baseline; gap: 0.4rem;
+  padding: 0.36rem 0.55rem; border-radius: 2px;
+  border: 1px solid var(--rule-2); background: var(--ground-2); color: var(--ink);
+  transition: border-color var(--dur-micro) var(--ease-out);
+}
+.chip-pgm:hover { border-color: var(--colby); }
+.chip-pgm small { font-size: 0.68rem; color: var(--ink-3); }
+.chip-pgm[data-in="yes"] { opacity: 0.45; cursor: default; }
+.chips--chosen .chip-pgm { background: var(--colby); border-color: var(--colby); color: var(--ground); }
+.chips--chosen .chip-pgm small { color: color-mix(in srgb, var(--ground) 78%, transparent); }
+.chips--chosen .chip-pgm::after { content: "\00d7"; font-size: 0.9rem; line-height: 1; opacity: 0.85; }
+
+.plan__idle, .plan__total { font-size: var(--text-sm); color: var(--ink-2); max-width: 72ch; line-height: 1.7; }
+.plan__total { margin-bottom: var(--space-md); }
+.plan__total b { color: var(--ink); }
+
+.plan__legend { font-size: var(--text-sm); color: var(--ink-3); max-width: 72ch; line-height: 1.7; margin-bottom: var(--space-md); }
+.warns { list-style: none; margin: 0 0 var(--space-lg); padding: 0; display: grid; gap: var(--space-2xs); }
+.warns li {
+  font-size: var(--text-sm); line-height: 1.6; color: var(--ink);
+  border: 1px solid var(--terr-hum); border-radius: 2px;
+  background: var(--terr-hum-wash); padding: var(--space-xs) var(--space-sm);
+}
+
+.pcard { border: 1px solid var(--rule); border-radius: 2px; padding: var(--space-md); margin-bottom: var(--space-md); background: var(--ground-2); }
+.pcard[data-div="sci"] { border-top: 2px solid var(--terr-sci); }
+.pcard[data-div="soc"] { border-top: 2px solid var(--terr-soc); }
+.pcard[data-div="hum"] { border-top: 2px solid var(--terr-hum); }
+.pcard__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-xs); margin-bottom: var(--space-sm); }
+.pcard__name {
+  font: 600 var(--text-lg)/1.2 var(--font-sign); cursor: pointer;
+  background: transparent; border: 0; padding: 0; color: var(--ink); text-align: left;
+  border-bottom: 1px solid transparent;
+}
+.pcard__name:hover { color: var(--colby); border-bottom-color: currentColor; }
+.pcard__kind { font-size: var(--text-xs); letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-3); }
+.pcard__drop {
+  margin-left: auto; font: 600 var(--text-xs)/1 var(--font-sign); letter-spacing: 0.05em;
+  text-transform: uppercase; cursor: pointer; background: transparent; border: 0;
+  padding: 0.2rem 0; color: var(--ink-3); border-bottom: 1px solid currentColor;
+}
+.pcard__drop:hover { color: var(--terr-hum); }
+.pcard__none, .pcard__tally { font-size: var(--text-sm); color: var(--ink-2); line-height: 1.6; }
+.pcard__tally { margin-top: var(--space-2xs); }
+.pcard__tally b { color: var(--ink); }
+
+.bar { height: 5px; border-radius: 3px; background: var(--ground-3); overflow: hidden; }
+.bar span { display: block; height: 100%; background: var(--colby); transition: width var(--dur-short) var(--ease-out); }
+
+.stages { list-style: none; margin: var(--space-sm) 0 0; padding: 0; display: grid; gap: var(--space-2xs); }
+.stage { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--space-sm); align-items: baseline; }
+.stage__when { font-size: var(--text-xs); letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-3); }
+.stage__codes { display: flex; flex-wrap: wrap; gap: var(--space-3xs); }
+@media (max-width: 640px) { .stage { grid-template-columns: minmax(0, 1fr); gap: 0.2rem; } }
+
+.tick {
+  font: 500 var(--text-sm)/1 var(--font-code); font-variant-numeric: tabular-nums;
+  cursor: pointer; white-space: nowrap; padding: 0.28rem 0.45rem; border-radius: 2px;
+  border: 1px solid var(--rule-2); background: var(--ground); color: var(--ink);
+  transition: border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+}
+.tick:hover { border-color: var(--colby); }
+.tick[data-done="yes"] { background: var(--colby); border-color: var(--colby); color: var(--ground); }
+.tick[data-done="yes"]::after { content: "\00a0\2713"; }
+.tick[data-shut="yes"] { border-style: dashed; color: var(--ink-3); }
+
+.pcard__rules { margin-top: var(--space-sm); }
+.pcard__rules summary {
+  font-size: var(--text-xs); letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--ink-3); cursor: pointer;
+}
+.pcard__rules summary:hover { color: var(--colby); }
+.pcard__rules ul { margin: var(--space-xs) 0 0; padding-left: 1.1rem; display: grid; gap: var(--space-2xs); }
+.pcard__rules li { font-size: var(--text-sm); line-height: 1.6; color: var(--ink-2); max-width: 72ch; }
+
+.reqs { margin-top: var(--space-2xl); }
+.reqs__tally { font: 400 var(--text-sm)/1 var(--font-sign); color: var(--ink-3); text-transform: none; letter-spacing: 0; margin-left: var(--space-xs); }
+.reqs__tally b { color: var(--colby); font-weight: 700; }
+.reqs__note { font-size: var(--text-sm); color: var(--ink-3); max-width: 72ch; line-height: 1.7; margin-bottom: var(--space-md); }
+.reqs__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-xs); grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); }
+.req {
+  border: 1px solid var(--rule); border-radius: 2px; padding: var(--space-sm);
+  display: grid; gap: 0.3rem; align-content: start; background: var(--ground-2);
+}
+.req[data-met="yes"] { border-color: var(--colby); background: var(--signal-wash); }
+.req__box {
+  display: flex; align-items: center; gap: var(--space-xs); cursor: pointer;
+  background: transparent; border: 0; padding: 0; text-align: left; width: 100%;
+}
+.req__box::before {
+  content: ""; flex: none; width: 1.05rem; height: 1.05rem; border-radius: 2px;
+  border: 1px solid var(--rule-2); background: var(--ground);
+}
+.req__box[aria-checked="true"]::before {
+  content: "\2713"; color: var(--ground); background: var(--colby); border-color: var(--colby);
+  font: 700 0.72rem/1.05rem var(--font-sign); text-align: center;
+}
+.req__box:hover::before { border-color: var(--colby); }
+.req__label { font: 600 var(--text-sm)/1.3 var(--font-sign); color: var(--ink); }
+.req__how { font-size: var(--text-xs); color: var(--ink-3); line-height: 1.6; }
+.req .step { display: flex; align-items: center; gap: var(--space-2xs); }
+.step button {
+  font: 700 0.95rem/1 var(--font-code); cursor: pointer; width: 1.6rem; height: 1.6rem;
+  border: 1px solid var(--rule-2); border-radius: 2px; background: var(--ground); color: var(--ink);
+}
+.step button:hover { border-color: var(--colby); color: var(--colby); }
+.step b { font: 600 var(--text-sm)/1 var(--font-code); font-variant-numeric: tabular-nums; color: var(--ink); }
+.step input {
+  font: 600 var(--text-sm)/1 var(--font-code); width: 4.4rem; padding: 0.3rem 0.4rem;
+  border: 1px solid var(--rule-2); border-radius: 2px; background: var(--ground); color: var(--ink);
+}
+.step input:focus-visible { outline: 2px solid var(--signal); outline-offset: 1px; }
+
 /* ======================= masthead flow =======================
  * A WebGL noise field sits behind the header and title only. The chart below is
  * fine hairlines and 101 labels, so it keeps a still, light ground.
@@ -948,6 +1097,45 @@ p { margin: 0; text-wrap: pretty; }
     </div>
   </section>
 
+
+  <section class="shell datum plan" id="plan">
+    <div class="datum__head">
+      <h2>Where you stand</h2>
+      <p class="spec">Your year, your programs, what is left</p>
+    </div>
+    <p class="datum__lede">The chart shows every route. This shows yours. Say what year you are in and what you have declared, and every course already in your list gets matched against the routes you are actually walking. <b>Workday holds the official audit and this is not it</b>, but it will show you the shape of what is left early enough that you can still change your mind.</p>
+
+    <div class="setup">
+      <div class="setup__row">
+        <span class="setup__label" id="yr-label">Class year</span>
+        <div class="yrs" id="plan-year" role="group" aria-labelledby="yr-label"></div>
+        <button type="button" class="setup__clear" id="plan-clear">Start over</button>
+      </div>
+      <div class="setup__row">
+        <label class="setup__label" for="plan-find">What you are doing</label>
+        <div class="setup__find">
+          <input class="find" id="plan-find" type="search" autocomplete="off"
+                 placeholder="e.g. Computer Science, Government, Music">
+          <ul class="chips" id="plan-results" aria-label="Matching programs"></ul>
+        </div>
+      </div>
+      <div class="setup__row">
+        <span class="setup__label">Declared</span>
+        <ul class="chips chips--chosen" id="plan-chosen" aria-label="Programs you have declared"></ul>
+      </div>
+    </div>
+
+    <div id="plan-out"></div>
+
+    <div class="reqs">
+      <h3 class="datum__sub">The all-College requirements <span class="reqs__tally" id="plan-reqs-tally"></span></h3>
+      <p class="reqs__note">A course number does not say which area it carries, so these are yours to tick. Every one of them is spelled out in full in the section below.</p>
+      <ul class="reqs__list" id="plan-reqs"></ul>
+    </div>
+
+    <p class="datum__note">Every count here is of <b>courses named on a route</b>. Routes also say things like &ldquo;four electives at the 200 level&rdquo;, which no list of numbers can stand in for, so a full bar means the named courses are done and not that the program is. Levels follow the catalogue rule that 200 opens to sophomores and 300 to juniors, and an instructor may admit you to either earlier.</p>
+  </section>
+
   <section class="shell datum" id="requirements">
     <div class="datum__head">
       <h2>Underneath all of it</h2>
@@ -1044,5 +1232,6 @@ p { margin: 0; text-wrap: pretty; }
 <script src="flow.js" defer></script>
 <script src="data.js"></script>
 <script src="map.js"></script>
+<script src="plan.js"></script>
 </body>
 </html>
