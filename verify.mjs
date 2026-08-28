@@ -11,8 +11,8 @@ import { createContext, runInContext } from 'node:vm';
 
 const ctx = createContext({});
 const src = readFileSync(new URL('./data.js', import.meta.url), 'utf8');
-runInContext(src + ';globalThis.__X={PROGRAMS,CLUSTERS,BANDS};', ctx);
-const { PROGRAMS, CLUSTERS, BANDS } = ctx.__X;
+runInContext(src + ';globalThis.__X={PROGRAMS,CLUSTERS,BANDS,EXCL_GROUPS};', ctx);
+const { PROGRAMS, CLUSTERS, BANDS, EXCL_GROUPS } = ctx.__X;
 
 const errors = [];
 const warnings = [];
@@ -77,6 +77,27 @@ for (const p of PROGRAMS) {
   }
 }
 
+/* Exclusion groups: the prose in rules[] and the machine-readable excl field are two
+   records of the same catalogue restriction, and they are easy to let drift apart. */
+const groupMembers = new Map(Object.keys(EXCL_GROUPS ?? {}).map((g) => [g, []]));
+for (const p of PROGRAMS) {
+  if (p.excl === undefined) continue;
+  if (!Array.isArray(p.excl)) { fail(`${p.id}: excl is not an array`); continue; }
+  for (const g of p.excl) {
+    if (!groupMembers.has(g)) fail(`${p.id}: excl group "${g}" is not in EXCL_GROUPS`);
+    else groupMembers.get(g).push(p.id);
+  }
+}
+for (const [g, members] of groupMembers) {
+  if (members.length < 2) fail(`exclusion group "${g}" has ${members.length} member(s); it needs at least two to exclude anything`);
+}
+/* Anything whose rules say "only" about holding one program should carry a group.
+   This is a warning, not an error: plenty of rules use "only" about other things. */
+for (const p of PROGRAMS) {
+  const saysOnly = (p.rules ?? []).some((r) => /\bone [a-z].{0,44}? major only\b/i.test(r.replace(/<[^>]+>/g, '')));
+  if (saysOnly && !(p.excl ?? []).length) warn(`${p.id}: rules state a "one X major only" restriction but no excl group is set`);
+}
+
 /* every program has to be reachable, or it is invisible on the chart */
 const degree = new Map([...byId.keys()].map((k) => [k, 0]));
 for (const p of PROGRAMS) {
@@ -111,6 +132,7 @@ console.log(`programs   ${PROGRAMS.length}  (${Object.entries(counts).map(([k, v
 console.log(`links      ${edges.size}`);
 console.log(`codes      ${codeCount} course references`);
 console.log(`clusters   ${Object.keys(CLUSTERS).length} across ${BANDS.length} bands`);
+console.log(`exclusions ${groupMembers.size} groups: ${[...groupMembers].map(([g, m]) => `${g} (${m.length})`).join(', ')}`);
 
 if (warnings.length) {
   console.log(`\n${warnings.length} warning(s):`);

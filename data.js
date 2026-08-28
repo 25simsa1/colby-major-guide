@@ -38,6 +38,16 @@ const BANDS = [
   { div: 'hum', label: 'Humanities',       x0: 0.512, x1: 0.988 }
 ];
 
+/* Mutually exclusive programs. The catalogue words the same restriction
+   differently on different department pages, so each program carries the group
+   it belongs to and the prose in rules[] stays as transcribed. */
+const EXCL_GROUPS = {
+  computing:  'the catalogue allows one computing major',
+  envstudies: 'policy, science and computation are mutually exclusive',
+  music:      'the catalogue allows one Music Department major',
+  dsstat:     'the data science major excludes a statistics major'
+};
+
 const PROGRAMS = [
 
 /* ============================ NATURAL SCIENCES ============================ */
@@ -45,6 +55,7 @@ const PROGRAMS = [
 {
   id: 'cs', name: 'Computer Science', short: 'Computer Science',
   div: 'sci', cluster: 'computing', kind: 'major', dept: 'Computer Science',
+  excl: ['computing'],
   size: 'Roughly 9 courses plus a 300→400 sequence',
   blurb: 'The department frames the subject as computational thinking: deconstructing a problem until it can be described as computable operations. Projects grow in scope within each course and across the major.',
   path: [
@@ -65,6 +76,7 @@ const PROGRAMS = [
 {
   id: 'csai', name: 'Computer Science: Artificial Intelligence', short: 'CS · AI',
   div: 'sci', cluster: 'computing', kind: 'conc', dept: 'Computer Science',
+  excl: ['computing'],
   size: 'The CS core plus a required AI sequence',
   blurb: 'The same spine as the CS major with the electives pinned to machine learning and intelligent systems, and a linear algebra requirement written into the degree rather than left to choice.',
   path: [
@@ -82,6 +94,7 @@ const PROGRAMS = [
 {
   id: 'ds', name: 'Data Science', short: 'Data Science',
   div: 'sci', cluster: 'computing', kind: 'major', dept: 'Computer Science, Mathematics &amp; Statistics',
+  excl: ['computing', 'dsstat'],
   size: '12 courses',
   blurb: 'Run jointly by three departments. Collection, storage, integration, analysis, inference, communication and the ethics of data in context, ending in a two-course applied sequence you propose yourself.',
   path: [
@@ -137,6 +150,7 @@ const PROGRAMS = [
 {
   id: 'stat', name: 'Statistics', short: 'Statistics',
   div: 'sci', cluster: 'quant', kind: 'major', dept: 'Statistics',
+  excl: ['dsstat'],
   size: '10 courses, all at C&minus; or better',
   blurb: 'Built to pair with a field where data is central. Not only how to display and analyse data, but how to design the study and collect it in the first place.',
   path: [
@@ -330,6 +344,7 @@ const PROGRAMS = [
 {
   id: 'compbio', name: 'Computational Biology', short: 'Computational Biology',
   div: 'sci', cluster: 'computing', kind: 'major', dept: 'Biology &amp; Computer Science',
+  excl: ['computing'],
   size: 'Foundations, five core courses, four electives',
   blurb: 'A designed major, not a pre-set one: you build an integrative plan with advisors in both departments. Aimed at bioinformatics and computational biology research or employment.',
   path: [
@@ -365,6 +380,7 @@ const PROGRAMS = [
 {
   id: 'envsci', name: 'Environmental Science', short: 'Environmental Science',
   div: 'sci', cluster: 'earthenv', kind: 'major', dept: 'Environmental Studies',
+  excl: ['envstudies'],
   size: 'Foundations, methods, human dimensions, four electives, capstone',
   blurb: 'Founded in 1971 and nationally recognised. Interdisciplinary by design: the science core is real, but two courses on the human dimensions of environmental problems are written into the degree.',
   path: [
@@ -385,6 +401,7 @@ const PROGRAMS = [
 {
   id: 'envcomp', name: 'Environmental Computation', short: 'Environmental Computation',
   div: 'sci', cluster: 'computing', kind: 'major', dept: 'Environmental Studies &amp; Computer Science',
+  excl: ['computing', 'envstudies'],
   size: '13 courses in four blocks',
   blurb: 'Computational thinking pointed at coupled human and natural systems. The most front-loaded major on this map: the department wants four of the thirteen courses inside your first year.',
   path: [
@@ -440,6 +457,7 @@ const PROGRAMS = [
 {
   id: 'comppsy', name: 'Computational Psychology', short: 'Computational Psychology',
   div: 'sci', cluster: 'computing', kind: 'major', dept: 'Psychology &amp; Computer Science',
+  excl: ['computing'],
   size: 'Around 12 courses',
   blurb: 'Questions about human and animal behaviour answered with the tools of computer science. One of the five CS+X majors, and the only one anchored in a social-science department.',
   path: [
@@ -554,6 +572,7 @@ const PROGRAMS = [
 {
   id: 'envpol', name: 'Environmental Policy', short: 'Environmental Policy',
   div: 'soc', cluster: 'society', kind: 'major', dept: 'Environmental Studies',
+  excl: ['envstudies'],
   size: 'Foundations, methods, four electives, capstone',
   blurb: 'The policy side of Colby&rsquo;s oldest interdisciplinary department. Economics and ecology are both compulsory, which is unusual for a policy degree and is the point of it.',
   path: [
@@ -918,6 +937,7 @@ const PROGRAMS = [
 {
   id: 'music', name: 'Music', short: 'Music',
   div: 'hum', cluster: 'arts', kind: 'major', dept: 'Music',
+  excl: ['music'],
   size: 'Around 9 courses plus lessons and ensembles',
   blurb: 'Hundreds of students perform every semester. The department explicitly works across sound, art, media, culture and technology rather than treating music as a closed discipline.',
   path: [
@@ -938,6 +958,7 @@ const PROGRAMS = [
 {
   id: 'musicic', name: 'Music&ndash;Interdisciplinary Computation', short: 'Music &amp; Computation',
   div: 'hum', cluster: 'arts', kind: 'major', dept: 'Music &amp; Computer Science',
+  excl: ['computing', 'music'],
   size: 'Around 12 courses across two departments',
   blurb: 'One of the five CS+X majors, and the one that reaches furthest across the map: a humanities degree sitting inside the computing exclusion set.',
   path: [
@@ -975,6 +996,7 @@ const PROGRAMS = [
 {
   id: 'ptdic', name: 'Theater &amp; Dance&ndash;Interdisciplinary Computation', short: 'Theater &amp; Computation',
   div: 'hum', cluster: 'arts', kind: 'major', dept: 'Performance, Theater &amp; Dance and Computer Science',
+  excl: ['computing'],
   size: '11 courses, 44 credits, plus three productions',
   blurb: 'Computation applied to performance scenography and stage design. A sequenced design curriculum with exposure to dance, acting, choreography and directing alongside it.',
   path: [
