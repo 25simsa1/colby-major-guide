@@ -11,31 +11,31 @@
  */
 
 const CLUSTERS = {
-  computing:  { div: 'sci', x: 0.128, y: 0.20 },
-  quant:      { div: 'sci', x: 0.072, y: 0.55 },
-  life:       { div: 'sci', x: 0.250, y: 0.21 },
-  physical:   { div: 'sci', x: 0.166, y: 0.83 },
-  earthenv:   { div: 'sci', x: 0.279, y: 0.58 },
-  mind:       { div: 'sci', x: 0.297, y: 0.90 },
+  computing:  { div: 'sci', x: 0.118, y: 0.20 },
+  quant:      { div: 'sci', x: 0.065, y: 0.55 },
+  life:       { div: 'sci', x: 0.232, y: 0.21 },
+  physical:   { div: 'sci', x: 0.154, y: 0.83 },
+  earthenv:   { div: 'sci', x: 0.260, y: 0.58 },
+  mind:       { div: 'sci', x: 0.276, y: 0.90 },
 
-  sts:        { div: 'soc', x: 0.382, y: 0.13 },
-  econgov:    { div: 'soc', x: 0.423, y: 0.34 },
-  society:    { div: 'soc', x: 0.399, y: 0.66 },
-  world:      { div: 'soc', x: 0.484, y: 0.47 },
-  ed:         { div: 'soc', x: 0.457, y: 0.88 },
+  sts:        { div: 'soc', x: 0.357, y: 0.13 },
+  econgov:    { div: 'soc', x: 0.396, y: 0.34 },
+  society:    { div: 'soc', x: 0.373, y: 0.66 },
+  world:      { div: 'soc', x: 0.453, y: 0.47 },
+  ed:         { div: 'soc', x: 0.428, y: 0.88 },
 
-  letters:    { div: 'hum', x: 0.700, y: 0.17 },
-  thought:    { div: 'hum', x: 0.596, y: 0.50 },
-  arts:       { div: 'hum', x: 0.892, y: 0.30 },
-  languages:  { div: 'hum', x: 0.858, y: 0.74 },
-  area:       { div: 'hum', x: 0.626, y: 0.87 }
+  letters:    { div: 'hum', x: 0.680, y: 0.17 },
+  thought:    { div: 'hum', x: 0.567, y: 0.50 },
+  arts:       { div: 'hum', x: 0.887, y: 0.30 },
+  languages:  { div: 'hum', x: 0.851, y: 0.74 },
+  area:       { div: 'hum', x: 0.600, y: 0.87 }
 };
 
 const BANDS = [
-  /* band widths track program counts: 23 natural sciences, 11 social, 32 humanities */
-  { div: 'sci', label: 'Natural sciences', x0: 0.015, x1: 0.335 },
-  { div: 'soc', label: 'Social sciences',  x0: 0.355, x1: 0.525 },
-  { div: 'hum', label: 'Humanities',       x0: 0.545, x1: 0.985 }
+  /* band widths track program counts: 32 natural sciences, 18 social, 51 humanities */
+  { div: 'sci', label: 'Natural sciences', x0: 0.012, x1: 0.312 },
+  { div: 'soc', label: 'Social sciences',  x0: 0.332, x1: 0.492 },
+  { div: 'hum', label: 'Humanities',       x0: 0.512, x1: 0.988 }
 ];
 
 const PROGRAMS = [
