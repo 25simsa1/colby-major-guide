@@ -117,14 +117,15 @@
 
   /* ------------------------------------------------------------ warnings */
 
+  /* A course you have already finished is not a problem with the plan, so it must
+     not look like one. Only the level clash is a warning; the rest is news. */
   function notesFor(code, term) {
-    var out = [];
+    var warn = null, done = API.isTaken(code);
     if (!openInYear(code, term.year)) {
       var lv = levelOf(code);
-      out.push(lv >= 400 ? 'seniors only' : lv >= 300 ? 'opens to juniors' : 'opens to sophomores');
+      warn = lv >= 400 ? 'seniors only' : lv >= 300 ? 'opens to juniors' : 'opens to sophomores';
     }
-    if (API.isTaken(code)) out.push('already done');
-    return out;
+    return { warn: warn, done: done, label: warn || (done ? 'already done' : null) };
   }
 
   function janCount() {
@@ -136,13 +137,14 @@
 
   function courseChip(code, key) {
     var term = TERMS.filter(function (t) { return t.key === key; })[0];
-    var notes = notesFor(code, term);
+    var n = notesFor(code, term);
     var owners = (ALL[code] || []).length;
     return '<li><button type="button" class="pchip" data-code="' + esc(code) + '" data-term="' + esc(key) + '"' +
-      (notes.length ? ' data-warn="yes"' : '') +
+      (n.warn ? ' data-warn="yes"' : '') + (n.done ? ' data-done="yes"' : '') +
       ' title="' + esc(code + ' is named by ' + owners + ' program' + (owners === 1 ? '' : 's') +
-        (notes.length ? '. ' + notes.join(', ') : '') + '. Click to remove.') + '">' +
-      esc(code) + (notes.length ? '<i>' + esc(notes[0]) + '</i>' : '') + '</button></li>';
+        (n.warn ? '. ' + n.warn : '') + (n.done ? '. You have already done it' : '') +
+        '. Click to remove.') + '">' +
+      esc(code) + (n.label ? '<i>' + esc(n.label) + '</i>' : '') + '</button></li>';
   }
 
   function draw() {
@@ -230,12 +232,12 @@
     if (!hits.length) h = '<li class="pick__none">No course code matches that.</li>';
     hits.forEach(function (c) {
       var where = placedIn(c);
-      var notes = notesFor(c, term);
+      var n = notesFor(c, term);
       h += '<li><button type="button" class="pick" data-pick="' + esc(c) + '"' +
         (wanted[c] ? ' data-wanted="yes"' : '') + '>' + esc(c) +
         (wanted[c] ? '<i>on your route</i>' : '') +
         (where ? '<em>in ' + esc(where.label.toLowerCase()) + ' of year ' + where.year + '</em>' : '') +
-        (notes.length && !where ? '<em>' + esc(notes[0]) + '</em>' : '') +
+        (n.label && !where ? '<em>' + esc(n.label) + '</em>' : '') +
         '</button></li>';
     });
     el('pick-list').innerHTML = h;

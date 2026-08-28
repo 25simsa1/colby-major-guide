@@ -943,6 +943,9 @@ p { margin: 0; text-wrap: pretty; }
 .planner .pchip:hover { opacity: 0.85; }
 .planner .pchip i { font: 400 0.62rem/1 var(--font-sign); font-style: normal; opacity: 0.85; }
 .planner .pchip[data-warn="yes"] { background: var(--terr-hum); border-color: var(--terr-hum); }
+/* finished is good news, not a fault: it keeps the house colour and gains a tick */
+.planner .pchip[data-done="yes"]:not([data-warn="yes"]) { background: var(--ground); color: var(--colby); }
+.planner .pchip[data-done="yes"]::before { content: "¹3 a0"; font-size: 0.8em; }
 .planner .pterm__add {
   margin-top: var(--space-2xs); align-self: flex-start;
   font: 600 var(--text-xs)/1 var(--font-sign); letter-spacing: 0.05em; text-transform: uppercase;
