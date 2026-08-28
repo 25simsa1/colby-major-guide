@@ -36,8 +36,13 @@
      identity guidance always sets on white. Everything else is tuned around it. */
   --colby:       oklch(28.4% 0.132 262);
 
+  /* the masthead band */
+  --flow-deep:   oklch(16% 0.045 258);
+  --flow-ink:    oklch(99% 0.004 250);
+  --flow-accent: oklch(88% 0.105 238);   /* a link has to out-read the white body text around it */
+
   /* paper */
-  --ground:      oklch(99.2% 0.002 255);
+  --ground:      oklch(98.4% 0.007 248);
   --ground-2:    oklch(96.5% 0.006 255);
   --ground-3:    oklch(93.5% 0.010 255);
   --graticule:   oklch(92.5% 0.012 255);
@@ -557,6 +562,59 @@ p { margin: 0; text-wrap: pretty; }
 .disclaimer p { color: var(--ink-2); max-width: 74ch; }
 .disclaimer b { color: var(--ink); font-weight: 700; }
 
+/* ======================= masthead flow =======================
+ * A WebGL noise field sits behind the header and title only. The chart below is
+ * fine hairlines and 101 labels, so it keeps a still, light ground.
+ * A scrim over the canvas guarantees text contrast whatever the field is doing. */
+.masthead { position: relative; isolation: isolate; background: var(--flow-deep); padding-bottom: var(--space-2xl); }
+.masthead > * { position: relative; z-index: 1; }
+
+#flow {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  display: block; z-index: 0; border: 0;
+}
+/* no WebGL, or the shader failed to build: a still gradient in the same colours */
+#flow.is-fallback {
+  background:
+    radial-gradient(120% 90% at 18% 8%, oklch(42% 0.13 258) 0%, transparent 55%),
+    radial-gradient(90% 80% at 82% 30%, oklch(34% 0.12 244) 0%, transparent 60%),
+    var(--flow-deep);
+}
+/* the scrim is what makes the contrast guarantee hold */
+.masthead::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--flow-deep) 46%, transparent) 0%,
+      color-mix(in srgb, var(--flow-deep) 52%, transparent) 62%,
+      color-mix(in srgb, var(--flow-deep) 58%, transparent) 86%,
+      var(--ground) 100%);
+}
+
+/* ---- the band runs light-on-dark ---- */
+.masthead .head { border-bottom-color: color-mix(in srgb, var(--flow-ink) 22%, transparent); }
+.masthead .head__mark { color: var(--flow-ink); }
+.masthead .head__mark b { color: var(--flow-accent); }
+.masthead .head__logo { filter: brightness(0) invert(1); }
+.masthead .spec { color: color-mix(in srgb, var(--flow-ink) 74%, transparent); }
+.masthead .spec a { color: inherit; text-underline-offset: 3px; }
+.masthead .spec a:hover { color: var(--flow-ink); }
+.masthead .tag-unofficial { color: oklch(87% 0.115 20); }   /* was 4.51:1 on the field, too thin */
+
+.masthead .title h1 { color: var(--flow-ink); }
+.masthead .title__lede { color: color-mix(in srgb, var(--flow-ink) 82%, transparent); }
+.masthead .title__lede b { color: var(--flow-ink); }
+.masthead .title__lede a { color: var(--flow-accent); text-underline-offset: 3px; }
+.masthead .title__lede a:hover { color: var(--flow-ink); }
+
+.masthead .reading { border-top-color: color-mix(in srgb, var(--flow-ink) 20%, transparent); }
+.masthead .reading:last-child { border-bottom-color: color-mix(in srgb, var(--flow-ink) 20%, transparent); }
+.masthead .reading b { color: var(--flow-ink); }
+.masthead .reading span { color: color-mix(in srgb, var(--flow-ink) 72%, transparent); }
+.masthead :focus-visible { outline-color: var(--flow-ink); }
+
+@media (prefers-reduced-motion: reduce) { #flow { opacity: 0.85; } }
+
 /* ============================ the datum ============================
  * The all-College requirements: the base plane every program on the chart sits
  * on. Presented as a ledger, not as another network. */
@@ -683,6 +741,8 @@ p { margin: 0; text-wrap: pretty; }
 </head>
 <body>
 
+<div class="masthead">
+<canvas id="flow" aria-hidden="true"></canvas>
 <header class="head">
   <a class="head__brand" href="#top">
     <img class="head__logo" src="colby-wordmark.png" width="480" height="238"
@@ -692,7 +752,7 @@ p { margin: 0; text-wrap: pretty; }
   </a>
   <div class="head__meta">
     <span class="tag-unofficial" title="Not a Colby College publication">Unofficial</span>
-    <p class="spec"><a href="#requirements" style="color:inherit;text-underline-offset:3px">All-College requirements</a> &middot; catalogue 2026&ndash;27</p>
+    <p class="spec"><a href="#requirements">All-College requirements</a> &middot; catalogue 2026&ndash;27</p>
   </div>
 </header>
 
@@ -702,7 +762,7 @@ p { margin: 0; text-wrap: pretty; }
     <div class="title__grid">
       <div>
         <h1 class="lift" style="--i:0">Discover every path Colby offers</h1>
-        <p class="title__lede lift" style="--i:1">The Colby catalogue lists departments and programs alphabetically, as though the order didn&rsquo;t matter. But if you look at <b>which majors share a gateway course, which ones lock each other out,</b> and how a first-year course you already took can open three doors, things start to make more sense. The routes in this chart follow the shared requirements, our joint degree options, and the named prerequisite bridges that got so many of you through your minor and into the major it lives inside. Beneath every route are <a href="#requirements" style="color:var(--signal);text-underline-offset:3px">the requirements all Colby students have to finish</a>, no matter which major they pick.</p>
+        <p class="title__lede lift" style="--i:1">The Colby catalogue lists departments and programs alphabetically, as though the order didn&rsquo;t matter. But if you look at <b>which majors share a gateway course, which ones lock each other out,</b> and how a first-year course you already took can open three doors, things start to make more sense. The routes in this chart follow the shared requirements, our joint degree options, and the named prerequisite bridges that got so many of you through your minor and into the major it lives inside. Beneath every route are <a href="#requirements">the requirements all Colby students have to finish</a>, no matter which major they pick.</p>
       </div>
       <div class="readings lift" style="--i:2">
         <div class="reading"><b id="n-programs">101</b><span>programs charted &mdash; every major, concentration and minor in the catalogue</span></div>
@@ -712,6 +772,7 @@ p { margin: 0; text-wrap: pretty; }
       </div>
     </div>
   </section>
+</div>
 
   <section class="chart" aria-labelledby="chart-h">
     <h2 id="chart-h" class="sr-only">Interactive chart of Colby programs</h2>
@@ -843,6 +904,7 @@ p { margin: 0; text-wrap: pretty; }
 
 </main>
 
+<script src="flow.js" defer></script>
 <script src="data.js"></script>
 <script src="map.js"></script>
 </body>
