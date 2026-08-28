@@ -896,6 +896,96 @@ p { margin: 0; text-wrap: pretty; }
 }
 .plan .step input:focus-visible { outline: 2px solid var(--signal); outline-offset: 1px; }
 
+/* ======================= the four-year planner =======================
+ * Every selector here is scoped under .planner. The section defines short names
+ * (pterm, pchip, pick) on a page that already uses short names, and an unscoped
+ * .stage in the section above this one once flattened the whole chart. */
+.planner__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); margin: var(--space-lg) 0 var(--space-xs); }
+.planner__btn {
+  font: 600 var(--text-sm)/1 var(--font-sign); cursor: pointer; white-space: nowrap;
+  padding: 0.55rem 0.9rem; border-radius: 2px;
+  border: 1px solid var(--colby); background: var(--colby); color: var(--ground);
+  transition: opacity var(--dur-micro) var(--ease-out);
+}
+.planner__btn:hover { opacity: 0.88; }
+.planner__btn--quiet { background: transparent; color: var(--ink-2); border-color: var(--rule-2); }
+.planner__btn--quiet:hover { color: var(--terr-hum); border-color: currentColor; opacity: 1; }
+.planner__note { font-size: var(--text-sm); color: var(--colby); }
+.planner__link {
+  width: 100%; max-width: 46rem; margin-bottom: var(--space-md);
+  font: 400 var(--text-xs)/1.4 var(--font-code); padding: 0.5rem 0.6rem;
+  border: 1px solid var(--rule-2); border-radius: 2px; background: var(--ground-2); color: var(--ink-2);
+}
+.planner__link[hidden] { display: none; }
+
+.planner .pyear { margin-bottom: var(--space-md); }
+.planner .pyear h4 {
+  font-size: var(--text-xs); letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: var(--space-2xs); font-weight: 600;
+}
+.planner .pterms { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,0.55fr) minmax(0,1fr); gap: var(--space-xs); }
+@media (max-width: 760px) { .planner .pterms { grid-template-columns: minmax(0,1fr); } }
+.planner .pterm {
+  border: 1px solid var(--rule); border-radius: 2px; background: var(--ground-2);
+  padding: var(--space-xs); display: flex; flex-direction: column; min-height: 6.5rem;
+}
+.planner .pterm--jan { background: var(--ground-3); }
+.planner .pterm header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2xs); margin-bottom: var(--space-2xs); }
+.planner .pterm__name { font-size: var(--text-xs); letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-3); }
+.planner .pterm__n { font: 700 var(--text-xs)/1 var(--font-code); color: var(--colby); }
+.planner .pchips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-3xs); flex: 1; align-content: flex-start; }
+.planner .pchip {
+  font: 500 var(--text-sm)/1.15 var(--font-code); font-variant-numeric: tabular-nums;
+  cursor: pointer; text-align: left; padding: 0.26rem 0.42rem; border-radius: 2px;
+  border: 1px solid var(--colby); background: var(--colby); color: var(--ground);
+  display: inline-flex; flex-direction: column; gap: 0.1rem;
+}
+.planner .pchip:hover { opacity: 0.85; }
+.planner .pchip i { font: 400 0.62rem/1 var(--font-sign); font-style: normal; opacity: 0.85; }
+.planner .pchip[data-warn="yes"] { background: var(--terr-hum); border-color: var(--terr-hum); }
+.planner .pterm__add {
+  margin-top: var(--space-2xs); align-self: flex-start;
+  font: 600 var(--text-xs)/1 var(--font-sign); letter-spacing: 0.05em; text-transform: uppercase;
+  cursor: pointer; background: transparent; border: 1px dashed var(--rule-2); border-radius: 2px;
+  padding: 0.3rem 0.5rem; color: var(--ink-3);
+}
+.planner .pterm__add:hover { border-style: solid; border-color: var(--colby); color: var(--colby); }
+
+.planner__tally { font-size: var(--text-sm); color: var(--ink-2); margin-top: var(--space-sm); }
+.planner__tally b { color: var(--ink); }
+.planner__hint { font-size: var(--text-sm); color: var(--ink-3); margin-top: var(--space-sm); }
+.planner__cover { list-style: none; margin: var(--space-xs) 0 0; padding: 0; display: grid; gap: 0.15rem; }
+.planner__cover li { font-size: var(--text-sm); color: var(--ink-2); }
+.planner__cover b { color: var(--ink); }
+.planner__cover span { color: var(--terr-hum); }
+
+.planner .pickwrap {
+  position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-start; justify-content: center;
+  padding: var(--space-2xl) var(--space-md); background: color-mix(in srgb, var(--flow-deep) 55%, transparent);
+}
+.planner .pickwrap[hidden] { display: none; }
+.planner .pick__box {
+  width: min(30rem, 100%); max-height: 74vh; display: flex; flex-direction: column;
+  background: var(--ground); border: 1px solid var(--rule-2); border-radius: 3px;
+  padding: var(--space-md); box-shadow: 0 18px 50px rgb(0 0 0 / 0.28);
+}
+.planner .pick__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-sm); }
+.planner .pick__head h3 { font: 600 var(--text-lg)/1.2 var(--font-sign); color: var(--ink); }
+.planner .pick__close { font-size: 1.5rem; line-height: 1; cursor: pointer; background: transparent; border: 0; color: var(--ink-3); padding: 0 0.2rem; }
+.planner .pick__close:hover { color: var(--terr-hum); }
+.planner .pick__find { width: 100%; margin: var(--space-sm) 0; }
+.planner .pick__list { list-style: none; margin: 0; padding: 0; overflow-y: auto; display: grid; gap: 2px; }
+.planner .pick {
+  width: 100%; text-align: left; cursor: pointer; display: flex; align-items: baseline; gap: var(--space-xs);
+  font: 500 var(--text-sm)/1 var(--font-code); padding: 0.42rem 0.5rem; border-radius: 2px;
+  border: 1px solid transparent; background: transparent; color: var(--ink);
+}
+.planner .pick:hover, .planner .pick:focus-visible { border-color: var(--colby); background: var(--signal-wash); }
+.planner .pick i { font: 600 0.66rem/1 var(--font-sign); font-style: normal; color: var(--colby); }
+.planner .pick em { font: 400 0.66rem/1 var(--font-sign); font-style: normal; color: var(--ink-3); margin-left: auto; }
+.planner .pick[data-wanted="yes"] { font-weight: 700; }
+.planner .pick__none { font-size: var(--text-sm); color: var(--ink-3); padding: 0.4rem; }
+
 /* ======================= masthead flow =======================
  * A WebGL noise field sits behind the header and title only. The chart below is
  * fine hairlines and 101 labels, so it keeps a still, light ground.
@@ -1218,6 +1308,39 @@ p { margin: 0; text-wrap: pretty; }
     <p class="datum__note">Every count here is of <b>courses named on a route</b>. Routes also say things like &ldquo;four electives at the 200 level&rdquo;, which no list of numbers can stand in for, so a full bar means the named courses are done and not that the program is. Levels follow the catalogue rule that 200 opens to sophomores and 300 to juniors, and an instructor may admit you to either earlier.</p>
   </section>
 
+
+  <section class="shell datum planner" id="planner">
+    <div class="datum__head">
+      <h2>Plan the four years</h2>
+      <p class="spec">Twelve terms &middot; saved in this browser</p>
+    </div>
+    <p class="datum__lede">Put the courses you intend to take into the term you intend to take them. The plan checks each one against the year it sits in, tells you which of your declared programs it covers, and counts your JanPlans. Colby&rsquo;s year is three terms, so January gets a slot of its own.</p>
+
+    <div class="planner__bar">
+      <button type="button" class="planner__btn" id="planner-share">Copy a link to this plan</button>
+      <button type="button" class="planner__btn planner__btn--quiet" id="planner-clear">Start over</button>
+      <span class="planner__note" id="planner-share-note"></span>
+    </div>
+    <input class="planner__link" id="planner-share-out" hidden readonly aria-label="A link containing your plan">
+
+    <div id="planner-grid"></div>
+    <div id="planner-sum"></div>
+
+    <p class="datum__note"><b>There is no account, and that is deliberate.</b> Your plan lives in this browser and nowhere else. Hyperschedule can offer a Claremont sign-in because it runs a server that completes the handshake with the colleges&rsquo; identity provider; this site is a handful of files with nothing behind them, and a page that asked you for a Colby password would look exactly like one phishing for it. What signing in really buys is carrying your plan to another device, which the link button above does instead. Nothing here is a registration: <b>a course is only really yours once it is registered in Workday</b>.</p>
+
+    <div class="pickwrap" id="picker" hidden>
+      <div class="pick__box" role="dialog" aria-modal="true" aria-labelledby="pick-title">
+        <header class="pick__head">
+          <h3 id="pick-title">Add to <span id="pick-where"></span></h3>
+          <button type="button" class="pick__close" id="pick-close" aria-label="Close">&times;</button>
+        </header>
+        <input class="find pick__find" id="pick-find" type="search" autocomplete="off"
+               placeholder="Type a course code, e.g. CS 231">
+        <ul class="pick__list" id="pick-list" aria-label="Courses you can add"></ul>
+      </div>
+    </div>
+  </section>
+
   <section class="shell datum" id="requirements">
     <div class="datum__head">
       <h2>Underneath all of it</h2>
@@ -1315,5 +1438,6 @@ p { margin: 0; text-wrap: pretty; }
 <script src="data.js"></script>
 <script src="map.js"></script>
 <script src="plan.js"></script>
+<script src="planner.js"></script>
 </body>
 </html>

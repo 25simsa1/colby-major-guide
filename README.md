@@ -28,6 +28,7 @@ Colby Communications about the wordmark.
 | `flow.js` | The masthead's WebGL noise field. Falls back to a CSS gradient without WebGL. |
 | `verify.mjs` | Data integrity check. `node verify.mjs`, exits non-zero on any problem. |
 | `plan.js` | "Where you stand": matches your course list against the programs you have declared. |
+| `planner.js` | "Plan the four years": twelve term slots, level checks, and a link that carries a plan to another browser. |
 | `fonts/` | Archivo and Azeret Mono, self-hosted. See `fonts/README.md` before touching them. |
 | `CNAME` | The custom domain. GitHub Pages reads this; deleting it drops the site back to the github.io path. |
 | `og.jpg` | The 1200×630 link-preview card. |
