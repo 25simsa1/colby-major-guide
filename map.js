@@ -364,6 +364,11 @@
     g.style.setProperty('--d', n.rank);
 
     g.appendChild(el('circle', { 'class': 'dot__halo', cx: n.cx.toFixed(1), cy: n.cy.toFixed(1), r: (n.r + 7).toFixed(1) }));
+    g.appendChild(el('circle', {
+      'class': 'dot__prog', cx: n.cx.toFixed(1), cy: n.cy.toFixed(1), r: (n.r + 4).toFixed(1),
+      'stroke-dasharray': '0 9999',
+      transform: 'rotate(-90 ' + n.cx.toFixed(1) + ' ' + n.cy.toFixed(1) + ')'
+    }));
     if (n.kind === 'conc' || n.kind === 'joint') {
       g.appendChild(el('circle', { 'class': 'dot__disc', cx: n.cx.toFixed(1), cy: n.cy.toFixed(1), r: (n.r + 3.6).toFixed(1), 'fill-opacity': '0', 'stroke-opacity': '0.75' }));
     }
@@ -379,6 +384,238 @@
     gDots.appendChild(g);
     n.el = g;
   });
+
+
+  /* ================= courses the student has already taken =================
+   * The route prose is written for humans, so pulling real course numbers out of it
+   * needs care: "at the 300 level" is not a course, "CS 15X" is a family rather than
+   * one class, and "BI/ES 271" is one course cross-listed under two codes. */
+  var SPAN_RE = /<span class="code">([^<]+)<\/span>/g;
+  var CODE_SHAPE = /^[A-Z]{2,3} \d{3}[A-Z]?$/;
+  function bare(html) {
+    return html.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&[a-z]+;/g, ' ');
+  }
+
+  /* returns, per stage, the resolved code for each <span class="code"> in order,
+     or null where that span is not a real course */
+  function stageCodeMap(p) {
+    if (p._codeMap) return p._codeMap;
+    var map = [], last = '';
+    p.path.forEach(function (stage) {
+      var html = stage.what, row = [], m;
+      SPAN_RE.lastIndex = 0;
+      while ((m = SPAN_RE.exec(html)) !== null) {
+        var raw = m[1].replace(/&nbsp;/g, ' ').trim();
+        var before = bare(html.slice(Math.max(0, m.index - 50), m.index)).replace(/\s+$/, '');
+        var after = bare(html.slice(m.index + m[0].length, m.index + m[0].length + 34));
+        var codes = null;
+        var slash = raw.match(/^([A-Z]{2,3})\/([A-Z]{2,3})\s+(\d{3}[A-Z]?)$/);
+        var pre = raw.match(/^([A-Z]{2,3})\s+(\d{3}[A-Z]?)$/);
+        if (/X/.test(raw)) codes = null;                        /* CS 15X is a family */
+        else if (slash) { last = slash[1]; codes = [slash[1] + ' ' + slash[3], slash[2] + ' ' + slash[3]]; }
+        else if (pre) { last = pre[1]; codes = [raw]; }
+        else if (/^\d{3}[A-Z]?$/.test(raw)) {
+          if (/00$/.test(raw)) codes = null;                    /* a bare "300" is a level */
+          else if (last) codes = [last + ' ' + raw];
+        }
+        if (codes && /\b(numbered|above|level|at the)$/i.test(before)) codes = null;
+        if (codes && /^\s*(or above|or higher|and above|-level|level\b)/i.test(after)) codes = null;
+        if (codes) codes = codes.filter(function (c) { return CODE_SHAPE.test(c); });
+        row.push(codes && codes.length ? codes : null);
+      }
+      map.push(row);
+    });
+    p._codeMap = map;
+    return map;
+  }
+
+  var COURSE_OWNERS = {};          /* code -> { id: true } */
+  var PROGRAM_COURSES = {};        /* program id -> [code] */
+  PROGRAMS.forEach(function (p) {
+    var seen = {};
+    stageCodeMap(p).forEach(function (row) {
+      row.forEach(function (codes) {
+        if (!codes) return;
+        codes.forEach(function (c) {
+          seen[c] = true;
+          (COURSE_OWNERS[c] || (COURSE_OWNERS[c] = {}))[p.id] = true;
+        });
+      });
+    });
+    PROGRAM_COURSES[p.id] = Object.keys(seen);
+  });
+  var ALL_COURSES = Object.keys(COURSE_OWNERS).sort();
+
+  var STORE = 'colbymajorguide.taken';
+  var taken = {};
+  try {
+    var saved = JSON.parse(localStorage.getItem(STORE) || '[]');
+    if (Array.isArray(saved)) saved.forEach(function (c) { if (COURSE_OWNERS[c]) taken[c] = true; });
+  } catch (e) { /* private mode, or nothing stored */ }
+  function persist() {
+    try { localStorage.setItem(STORE, JSON.stringify(Object.keys(taken))); } catch (e) {}
+  }
+  function takenCount() { return Object.keys(taken).length; }
+
+  function progressOf(id) {
+    var all = PROGRAM_COURSES[id] || [], done = 0;
+    all.forEach(function (c) { if (taken[c]) done++; });
+    return { done: done, total: all.length };
+  }
+
+  /* ---- tray UI ---- */
+  var tToggle = document.getElementById('taken-toggle');
+  var tPanel = document.getElementById('taken-panel');
+  var tFind = document.getElementById('course-find');
+  var tResults = document.getElementById('course-results');
+  var tTray = document.getElementById('taken-tray');
+  var tCount = document.getElementById('taken-n');
+  var tClear = document.getElementById('taken-clear');
+  var tNote = document.getElementById('taken-note');
+
+  function chip(code, inTray) {
+    var owners = Object.keys(COURSE_OWNERS[code] || {}).length;
+    var li = document.createElement('li');
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip-course';
+    b.setAttribute('draggable', 'true');
+    b.dataset.code = code;
+    if (!inTray && taken[code]) b.dataset.in = 'yes';
+    b.innerHTML = code + ' <small>' + owners + '</small>';
+    b.title = inTray ? 'Remove ' + code
+                     : code + ' is named in ' + owners + ' program' + (owners === 1 ? '' : 's');
+    b.setAttribute('aria-label', b.title);
+    li.appendChild(b);
+    return li;
+  }
+
+  function renderResults() {
+    var q = (tFind.value || '').trim().toUpperCase().replace(/\s+/g, ' ');
+    tResults.innerHTML = '';
+    if (!q) {
+      var hint = document.createElement('li');
+      hint.className = 'chips__empty';
+      hint.textContent = ALL_COURSES.length + ' courses are named across the chart. Start typing a code.';
+      tResults.appendChild(hint);
+      return;
+    }
+    var hits = ALL_COURSES.filter(function (c) { return c.replace(/\s/g, '').indexOf(q.replace(/\s/g, '')) === 0; });
+    if (!hits.length) hits = ALL_COURSES.filter(function (c) { return c.replace(/\s/g, '').indexOf(q.replace(/\s/g, '')) !== -1; });
+    if (!hits.length) {
+      var none = document.createElement('li');
+      none.className = 'chips__empty';
+      none.textContent = 'No course on the chart matches that. Only courses named in a route are listed.';
+      tResults.appendChild(none);
+      return;
+    }
+    hits.slice(0, 40).forEach(function (c) { tResults.appendChild(chip(c, false)); });
+    if (hits.length > 40) {
+      var more = document.createElement('li');
+      more.className = 'chips__empty';
+      more.textContent = '+' + (hits.length - 40) + ' more, keep typing';
+      tResults.appendChild(more);
+    }
+  }
+
+  function renderTray() {
+    var codes = Object.keys(taken).sort();
+    tTray.innerHTML = '';
+    codes.forEach(function (c) { tTray.appendChild(chip(c, true)); });
+    tCount.textContent = codes.length;
+    tCount.dataset.any = codes.length ? 'yes' : 'no';
+    tClear.hidden = !codes.length;
+    if (!codes.length) {
+      tNote.textContent = 'Nothing added yet. Your list stays on this device.';
+    } else {
+      var touched = 0;
+      PROGRAMS.forEach(function (p) { if (progressOf(p.id).done) touched++; });
+      tNote.textContent = codes.length + ' course' + (codes.length === 1 ? '' : 's') +
+        ' \u00b7 they appear in ' + touched + ' of the ' + PROGRAMS.length + ' programs charted.';
+    }
+  }
+
+  function addCourse(c) { if (COURSE_OWNERS[c] && !taken[c]) { taken[c] = true; afterChange(); } }
+  function removeCourse(c) { if (taken[c]) { delete taken[c]; afterChange(); } }
+  function afterChange() {
+    persist(); renderTray(); renderResults(); paintProgress(); renderIndex();
+    if (selected) renderReadout(selected);
+  }
+
+  tToggle.addEventListener('click', function () {
+    var open = tToggle.getAttribute('aria-expanded') === 'true';
+    tToggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+    tPanel.hidden = open;
+    if (!open) tFind.focus();
+  });
+  var findTimer2 = null;
+  tFind.addEventListener('input', function () {
+    clearTimeout(findTimer2);
+    findTimer2 = setTimeout(renderResults, 90);
+  });
+  tFind.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'Enter') return;                 /* Enter adds the first hit */
+    ev.preventDefault();
+    var first = tResults.querySelector('.chip-course:not([data-in="yes"])');
+    if (first) { addCourse(first.dataset.code); tFind.select(); }
+  });
+  tResults.addEventListener('click', function (ev) {
+    var b = ev.target.closest && ev.target.closest('.chip-course');
+    if (b) addCourse(b.dataset.code);
+  });
+  tTray.addEventListener('click', function (ev) {
+    var b = ev.target.closest && ev.target.closest('.chip-course');
+    if (b) removeCourse(b.dataset.code);
+  });
+  tClear.addEventListener('click', function () { taken = {}; afterChange(); });
+
+  /* drag is the asked-for gesture; click and Enter above do the same job for touch
+     and keyboard, which HTML5 drag-and-drop does not serve */
+  document.addEventListener('dragstart', function (ev) {
+    var b = ev.target.closest && ev.target.closest('.chip-course');
+    if (!b) return;
+    ev.dataTransfer.setData('text/plain', b.dataset.code);
+    ev.dataTransfer.effectAllowed = 'copyMove';
+    b.classList.add('is-dragging');
+  });
+  document.addEventListener('dragend', function (ev) {
+    var b = ev.target.closest && ev.target.closest('.chip-course');
+    if (b) b.classList.remove('is-dragging');
+    tTray.classList.remove('is-target');
+  });
+  tTray.addEventListener('dragover', function (ev) {
+    ev.preventDefault(); ev.dataTransfer.dropEffect = 'copy';
+    tTray.classList.add('is-target');
+  });
+  tTray.addEventListener('dragleave', function (ev) {
+    if (!tTray.contains(ev.relatedTarget)) tTray.classList.remove('is-target');
+  });
+  tTray.addEventListener('drop', function (ev) {
+    ev.preventDefault();
+    tTray.classList.remove('is-target');
+    addCourse(ev.dataTransfer.getData('text/plain'));
+  });
+  tResults.addEventListener('dragover', function (ev) { ev.preventDefault(); });
+  tResults.addEventListener('drop', function (ev) {   /* drag out of the tray to remove */
+    ev.preventDefault();
+    removeCourse(ev.dataTransfer.getData('text/plain'));
+  });
+
+  /* ---- progress on the chart ---- */
+  function paintProgress() {
+    nodes.forEach(function (n) {
+      var pr = progressOf(n.id);
+      var arc = n.el.querySelector('.dot__prog');
+      if (!pr.total || !pr.done) { if (arc) arc.setAttribute('stroke-dasharray', '0 9999'); return; }
+      if (!arc) return;
+      var rr = +arc.getAttribute('r'), C = 2 * Math.PI * rr;
+      var frac = Math.min(1, pr.done / pr.total);
+      arc.setAttribute('stroke-dasharray', (C * frac).toFixed(1) + ' ' + C.toFixed(1));
+    });
+  }
+
+  renderResults();
+  renderTray();
 
   /* ---------- state ---------- */
   var selected = null, hovered = null, query = '';
@@ -483,9 +720,22 @@
     h += '<p class="pgm__dept">' + p.dept + '<br>' + p.size + '</p>';
     h += '<p class="pgm__note">' + p.blurb + '</p>';
 
+    var pr = progressOf(id);
+    if (pr.done) {
+      h += '<p class="pgm__progress">You have finished ' + pr.done + ' of the ' + pr.total +
+           ' courses named on this route.</p>';
+    }
+
     h += '<h3>The route</h3><ol class="route">';
-    p.path.forEach(function (s) {
-      h += '<li><span class="route__year">' + s.when + '</span><span class="route__what">' + s.what + '</span></li>';
+    var cmap = stageCodeMap(p);
+    p.path.forEach(function (s, si) {
+      var row = cmap[si] || [], k = 0;
+      var what = s.what.replace(/<span class="code">([^<]+)<\/span>/g, function (full, inner) {
+        var codes = row[k++];
+        var done = codes && codes.some(function (c) { return taken[c]; });
+        return done ? '<span class="code" data-done="yes">' + inner + '</span>' : full;
+      });
+      h += '<li><span class="route__year">' + s.when + '</span><span class="route__what">' + what + '</span></li>';
     });
     h += '</ol>';
 
@@ -512,17 +762,26 @@
     el2.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'start' });
   }
 
+  /* the URL carries the selection, so a route can actually be sent to someone */
+  function writeUrl(id) {
+    if (!window.history || !history.replaceState) return;
+    var url = location.pathname + (id ? '?p=' + encodeURIComponent(id) : '') + location.hash;
+    history.replaceState(null, '', url);
+  }
+
   function select(id, revealOnNarrow) {
     selected = id;
     hovered = null;
     renderReadout(id);
     paint(true);
+    writeUrl(id);
     if (revealOnNarrow && window.matchMedia('(max-width: 1180px)').matches) scrollToEl(readout);
   }
   function clearSelection() {
     selected = null;
     readout.innerHTML = IDLE;
     paint();
+    writeUrl(null);
   }
 
   /* ---------- node interaction ---------- */
@@ -767,7 +1026,9 @@
           '<span class="entry__name">' + p.name + '<small>' + p.dept + '</small></span>' +
           '<span class="entry__cell"><em>Starts with</em>' + (start || 'no fixed gateway') + '</span>' +
           '<span class="entry__cell"><em>Ends with</em>' + (end || 'advisor-chosen capstone') + '</span>' +
-          '<span class="entry__kind">' + KIND_WORD[p.kind] + '</span>' +
+          '<span class="entry__kind">' + (progressOf(p.id).done
+              ? '<span class="entry__prog">' + progressOf(p.id).done + '/' + progressOf(p.id).total + '</span>'
+              : KIND_WORD[p.kind]) + '</span>' +
           '</button>';
       }).join('');
     });
@@ -838,5 +1099,16 @@
   frameForViewport();
   syncButtons();
   paint();
+  paintProgress();
   renderIndex();
+
+  /* ?p=<id> opens straight to a program */
+  (function openFromUrl() {
+    var want = null;
+    try { want = new URLSearchParams(location.search).get('p'); } catch (e) { return; }
+    if (!want || !byId[want]) { if (want) writeUrl(null); return; }
+    select(want, false);
+    var el = nodeById[want] && nodeById[want].el;
+    if (el && !reduceMotion.matches) scrollToEl(document.querySelector('.chart'));
+  })();
 })();
