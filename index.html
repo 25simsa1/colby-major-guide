@@ -945,7 +945,7 @@ p { margin: 0; text-wrap: pretty; }
 .planner .pchip[data-warn="yes"] { background: var(--terr-hum); border-color: var(--terr-hum); }
 /* finished is good news, not a fault: it keeps the house colour and gains a tick */
 .planner .pchip[data-done="yes"]:not([data-warn="yes"]) { background: var(--ground); color: var(--colby); }
-.planner .pchip[data-done="yes"]::before { content: "¹3 a0"; font-size: 0.8em; }
+.planner .pchip[data-done="yes"]::before { content: "✓ "; font-size: 0.8em; }
 .planner .pterm__add {
   margin-top: var(--space-2xs); align-self: flex-start;
   font: 600 var(--text-xs)/1 var(--font-sign); letter-spacing: 0.05em; text-transform: uppercase;
@@ -988,6 +988,126 @@ p { margin: 0; text-wrap: pretty; }
 .planner .pick em { font: 400 0.66rem/1 var(--font-sign); font-style: normal; color: var(--ink-3); margin-left: auto; }
 .planner .pick[data-wanted="yes"] { font-weight: 700; }
 .planner .pick__none { font-size: var(--text-sm); color: var(--ink-3); padding: 0.4rem; }
+
+/* ======================= the week =======================
+ * Scoped under .timetable throughout. */
+.timetable .tt-tabs { display: flex; gap: 2px; margin: var(--space-lg) 0 var(--space-md); border-bottom: 1px solid var(--rule); }
+.timetable .tt-tab {
+  font: 600 var(--text-sm)/1 var(--font-sign); cursor: pointer; padding: 0.6rem 1rem;
+  background: transparent; border: 1px solid transparent; border-bottom: 0; color: var(--ink-3);
+  border-radius: 2px 2px 0 0; margin-bottom: -1px;
+}
+.timetable .tt-tab:hover { color: var(--ink); }
+.timetable .tt-tab[aria-selected="true"] { color: var(--colby); border-color: var(--rule); background: var(--ground); }
+
+.timetable .tt-layout { display: grid; grid-template-columns: minmax(0,1fr) 20rem; gap: var(--space-lg); align-items: start; }
+@media (max-width: 940px) { .timetable .tt-layout { grid-template-columns: minmax(0,1fr); } }
+.timetable .tt-main { min-width: 0; }
+
+.timetable .tt-searchbar { display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs); }
+.timetable .tt-find { flex: 1; min-width: 0; }
+.timetable .tt-count { font-size: var(--text-xs); color: var(--ink-3); white-space: nowrap; }
+.timetable .tt-results { list-style: none; margin: 0; padding: 0; max-height: 30rem; overflow-y: auto; display: grid; gap: 2px; }
+.timetable .tt-row {
+  width: 100%; text-align: left; cursor: pointer; display: grid;
+  grid-template-columns: 6.5rem minmax(0,1fr) 9rem 4.6rem 3.4rem 1.2rem;
+  align-items: center; gap: var(--space-xs);
+  font: 500 var(--text-sm)/1.2 var(--font-sign); padding: 0.45rem 0.55rem; border-radius: 2px;
+  border: 1px solid var(--rule); background: var(--ground-2); color: var(--ink);
+  border-left: 3px solid oklch(52% 0.13 var(--hue));
+}
+.timetable .tt-row:hover { border-color: var(--colby); }
+.timetable .tt-row[data-on="yes"] { background: oklch(94% 0.05 var(--hue)); border-color: oklch(52% 0.13 var(--hue)); }
+.timetable .tt-row__code { font-family: var(--font-code); font-weight: 600; }
+.timetable .tt-row__title { color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.timetable .tt-row__when { font: 400 var(--text-xs)/1.2 var(--font-code); color: var(--ink-3); white-space: nowrap; }
+.timetable .tt-row__st { font: 700 0.62rem/1 var(--font-sign); text-transform: uppercase; letter-spacing: 0.04em; text-align: center; padding: 0.22rem 0.3rem; border-radius: 2px; }
+.timetable .tt-row__st[data-st="open"] { background: oklch(92% 0.07 150); color: oklch(35% 0.10 150); }
+.timetable .tt-row__st[data-st="closed"] { background: oklch(92% 0.07 25); color: oklch(40% 0.13 25); }
+.timetable .tt-row__st[data-st="reopened"] { background: oklch(93% 0.07 75); color: oklch(40% 0.11 75); }
+.timetable .tt-row__st[data-st="unknown"] { background: var(--ground-3); color: var(--ink-3); }
+.timetable .tt-row__seats { font: 500 var(--text-xs)/1 var(--font-code); color: var(--ink-2); text-align: right; }
+.timetable .tt-row__pm { font: 600 1rem/1 var(--font-code); color: var(--ink-3); text-align: center; }
+.timetable .tt-none { font-size: var(--text-sm); color: var(--ink-3); padding: 0.5rem 0; }
+@media (max-width: 720px) {
+  .timetable .tt-row { grid-template-columns: 6rem minmax(0,1fr) 4.4rem 1.2rem; }
+  .timetable .tt-row__when, .timetable .tt-row__seats { display: none; }
+}
+
+.timetable .tt-weekwrap { overflow-x: auto; }
+.timetable .tt-grid { display: grid; grid-template-columns: 3.4rem repeat(5, minmax(6.2rem, 1fr)); gap: 1px; min-width: 40rem; }
+.timetable .tt-hours { display: grid; grid-template-rows: repeat(var(--rows), 1fr); padding-top: 1.7rem; }
+.timetable .tt-hours span { font: 400 var(--text-xs)/1 var(--font-code); color: var(--ink-3); text-align: right; padding-right: 0.4rem; transform: translateY(-0.4em); }
+.timetable .tt-day h4 { font-size: var(--text-xs); letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-3); text-align: center; height: 1.7rem; line-height: 1.7rem; font-weight: 600; }
+.timetable .tt-col { position: relative; height: calc(var(--rows) * 3.1rem); background: var(--ground-2); border: 1px solid var(--rule); border-radius: 2px;
+  background-image: repeating-linear-gradient(to bottom, transparent, transparent calc(3.1rem - 1px), var(--rule) calc(3.1rem - 1px), var(--rule) 3.1rem); }
+.timetable .tt-blk {
+  position: absolute; overflow: hidden; border-radius: 2px; padding: 0.22rem 0.3rem;
+  background: oklch(92% 0.06 var(--hue)); border: 1px solid oklch(52% 0.13 var(--hue));
+  border-left-width: 3px; color: oklch(30% 0.09 var(--hue)); display: flex; flex-direction: column; gap: 0.05rem;
+}
+.timetable .tt-blk[data-clash="yes"] { outline: 1px dashed var(--terr-hum); outline-offset: -3px; }
+.timetable .tt-blk b { font: 700 var(--text-xs)/1.1 var(--font-code); }
+.timetable .tt-blk span { font: 500 0.66rem/1.15 var(--font-sign); overflow: hidden; }
+.timetable .tt-blk em { font: 400 0.62rem/1.1 var(--font-code); font-style: normal; opacity: 0.85; margin-top: auto; }
+
+.timetable .tt-side { min-width: 0; display: grid; gap: var(--space-md); }
+.timetable .tt-credits { font-size: var(--text-sm); color: var(--ink-2); }
+.timetable .tt-credits b { color: var(--ink); font-weight: 700; }
+.timetable .tt-clashes { list-style: none; margin: var(--space-xs) 0; padding: 0; display: grid; gap: 2px; }
+.timetable .tt-clashes li { font-size: var(--text-xs); line-height: 1.5; color: var(--ink); border: 1px solid var(--terr-hum); background: var(--terr-hum-wash); border-radius: 2px; padding: 0.3rem 0.45rem; }
+.timetable .tt-basket { list-style: none; margin: var(--space-xs) 0 0; padding: 0; display: grid; gap: 2px; }
+.timetable .tt-pick { display: grid; grid-template-columns: minmax(0,1fr) auto auto; grid-template-areas: "code st drop" "title seats drop";
+  gap: 0.1rem 0.4rem; align-items: center; padding: 0.4rem 0.5rem; border-radius: 2px;
+  border: 1px solid var(--rule); background: var(--ground-2); border-left: 3px solid oklch(52% 0.13 var(--hue)); }
+.timetable .tt-pick[data-clash="yes"] { border-color: var(--terr-hum); }
+.timetable .tt-pick b { grid-area: code; font: 700 var(--text-xs)/1.1 var(--font-code); color: var(--ink); }
+.timetable .tt-pick > span { grid-area: title; font: 400 0.66rem/1.2 var(--font-sign); color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.timetable .tt-pick em { grid-area: st; font: 700 0.58rem/1 var(--font-sign); font-style: normal; text-transform: uppercase; padding: 0.18rem 0.28rem; border-radius: 2px; }
+.timetable .tt-pick em[data-st="open"] { background: oklch(92% 0.07 150); color: oklch(35% 0.10 150); }
+.timetable .tt-pick em[data-st="closed"] { background: oklch(92% 0.07 25); color: oklch(40% 0.13 25); }
+.timetable .tt-pick em[data-st="reopened"] { background: oklch(93% 0.07 75); color: oklch(40% 0.11 75); }
+.timetable .tt-pick em[data-st="unknown"] { background: var(--ground-3); color: var(--ink-3); }
+.timetable .tt-pick i { grid-area: seats; font: 500 0.62rem/1 var(--font-code); font-style: normal; color: var(--ink-2); text-align: right; }
+.timetable .tt-drop { grid-area: drop; font-size: 1.05rem; line-height: 1; cursor: pointer; background: transparent; border: 0; color: var(--ink-3); padding: 0 0.15rem; }
+.timetable .tt-drop:hover { color: var(--terr-hum); }
+
+.timetable .tt-out { border-top: 1px solid var(--rule); padding-top: var(--space-md); }
+.timetable .tt-out h4 { font-size: var(--text-xs); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+.timetable .tt-out__why { font-size: var(--text-xs); color: var(--ink-3); line-height: 1.6; margin: var(--space-2xs) 0 var(--space-xs); }
+.timetable .tt-dates { display: grid; gap: 0.3rem; margin-bottom: var(--space-xs); }
+.timetable .tt-dates label { font-size: var(--text-xs); color: var(--ink-3); display: flex; align-items: center; gap: 0.4rem; justify-content: space-between; }
+.timetable .tt-dates input { font: 400 var(--text-xs)/1 var(--font-code); padding: 0.32rem 0.4rem; border: 1px solid var(--rule-2); border-radius: 2px; background: var(--ground); color: var(--ink); }
+.timetable .tt-outbtns { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+.timetable .tt-btn { font: 600 var(--text-xs)/1 var(--font-sign); cursor: pointer; padding: 0.5rem 0.7rem; border-radius: 2px; border: 1px solid var(--colby); background: var(--colby); color: var(--ground); }
+.timetable .tt-btn:hover { opacity: 0.88; }
+.timetable .tt-btn--quiet { background: transparent; color: var(--ink-2); border-color: var(--rule-2); }
+.timetable .tt-btn--quiet:hover { color: var(--colby); border-color: var(--colby); opacity: 1; }
+.timetable .tt-out__note { font-size: var(--text-xs); color: var(--colby); line-height: 1.5; margin-top: var(--space-xs); }
+.timetable .tt-sample { color: var(--terr-hum); font-weight: 700; }
+
+/* ======================= print =======================
+ * A schedule that cannot leave the browser is not much of a schedule, and there is
+ * no account here to keep one. So the page prints: the week, what is on it, and the
+ * four-year plan. Everything that is navigation on screen is noise on paper. */
+@media print {
+  .masthead, .flowcanvas, .controls, .taken, .chart, .index, .plan, .colophon,
+  .timetable .tt-tabs, .timetable .tt-searchbar, .timetable .tt-results,
+  .timetable .tt-out, .planner__bar, .planner__link, .pterm__add { display: none !important; }
+  body { background: #fff; color: #000; }
+  .shell { padding: 0; max-width: none; }
+  .timetable, .planner { break-inside: avoid; padding-block: 0 1rem; border: 0; }
+  .timetable [data-paneof="week"] { display: block !important; }
+  .timetable [data-paneof="week"][hidden] { display: block !important; }
+  .timetable .tt-layout { grid-template-columns: 1fr; }
+  .timetable .tt-grid { min-width: 0; }
+  .timetable .tt-col { background: #fff; }
+  .timetable .tt-blk { box-shadow: none; }
+  .planner .pterms { grid-template-columns: 1fr 0.6fr 1fr; }
+  .datum__lede, .datum__note { font-size: 9pt; }
+  a[href]::after { content: ""; }
+  @page { margin: 14mm; }
+}
 
 /* ======================= masthead flow =======================
  * A WebGL noise field sits behind the header and title only. The chart below is
@@ -1174,6 +1294,41 @@ p { margin: 0; text-wrap: pretty; }
 #chart.entered .dot,
 #chart.entered .link,
 #chart.entered .territory { animation: none !important; }
+
+/* ============================ live seats ============================
+ * Fullness is shown by fill, not by hue. The page already spends three colours
+ * on the academic divisions and one on selection, so a red "full" would read as
+ * a fourth territory. An open course carries a chip whose bar fills left to
+ * right behind the digits; a full one inverts to solid ink. Both survive a
+ * greyscale print and neither depends on telling two hues apart.
+ * Everything here is scoped to .seats or .seat and is inert until seats.json
+ * exists, so deleting seats.js leaves no orphaned rules that touch the chart. */
+.seats {
+  font-size: var(--text-sm); line-height: 1.55; color: var(--ink-2);
+  margin: var(--space-sm) 0 var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--ground-2); border-left: 2px solid var(--rule-2);
+}
+.seats b { color: var(--ink); font-weight: 600; }
+.seats[data-sample="yes"] { border-left-color: var(--terr-hum); }
+
+.seat {
+  --fill: 0%;
+  display: inline-block; margin-left: 0.35em; padding: 0.05em 0.42em;
+  font: 500 var(--text-xs)/1.55 var(--font-code); font-variant-numeric: tabular-nums;
+  white-space: nowrap; vertical-align: baseline; border-radius: 2px;
+  color: var(--ink-2); border: 1px solid var(--edge);
+  background:
+    linear-gradient(to right, var(--ground-3) 0 var(--fill), transparent var(--fill) 100%),
+    var(--ground);
+}
+.seat[data-seat="full"] {
+  color: var(--ground); border-color: var(--ink); background: var(--ink);
+}
+@media (forced-colors: active) {
+  .seat { border: 1px solid CanvasText; background: Canvas; color: CanvasText; }
+  .seat[data-seat="full"] { background: CanvasText; color: Canvas; }
+}
 </style>
 </head>
 <body>
@@ -1344,6 +1499,54 @@ p { margin: 0; text-wrap: pretty; }
     </div>
   </section>
 
+
+  <section class="shell datum timetable" id="timetable" hidden>
+    <div class="datum__head">
+      <h2>Build the week</h2>
+      <p class="spec" id="tt-term"></p>
+    </div>
+    <p class="datum__lede">Pick sections and watch them land on the week. Clashes are drawn where they happen rather than hidden, because two courses at the same hour is a decision you have to make, not an error to suppress. Nothing here holds a seat: <b>a course is only yours once it is registered in Workday</b>.</p>
+
+    <div class="tt-tabs" role="tablist">
+      <button type="button" class="tt-tab" role="tab" data-pane="search" aria-selected="true">Course search</button>
+      <button type="button" class="tt-tab" role="tab" data-pane="week" aria-selected="false">The week</button>
+    </div>
+
+    <div class="tt-layout">
+      <div class="tt-main">
+        <div data-paneof="search">
+          <div class="tt-searchbar">
+            <input class="find tt-find" id="tt-find" type="search" autocomplete="off"
+                   placeholder="Search a code or a title">
+            <span class="tt-count" id="tt-count"></span>
+          </div>
+          <ul class="tt-results" id="tt-results"></ul>
+        </div>
+        <div data-paneof="week" hidden>
+          <div class="tt-weekwrap" id="tt-week"></div>
+        </div>
+      </div>
+
+      <aside class="tt-side">
+        <div id="tt-basket"></div>
+        <div class="tt-out">
+          <h4>Take it with you</h4>
+          <p class="tt-out__why">There is no account here, so the way to keep a schedule is to move it somewhere that will still have it tomorrow.</p>
+          <div class="tt-dates">
+            <label>Term starts <input type="date" id="tt-from"></label>
+            <label>and ends <input type="date" id="tt-to"></label>
+          </div>
+          <div class="tt-outbtns">
+            <button type="button" class="tt-btn" id="tt-ics">Calendar file</button>
+            <button type="button" class="tt-btn tt-btn--quiet" id="tt-print">Print or save a PDF</button>
+            <button type="button" class="tt-btn tt-btn--quiet" id="tt-clear">Clear</button>
+          </div>
+          <p class="tt-out__note" id="tt-export-note"></p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
   <section class="shell datum" id="requirements">
     <div class="datum__head">
       <h2>Underneath all of it</h2>
@@ -1442,5 +1645,9 @@ p { margin: 0; text-wrap: pretty; }
 <script src="map.js"></script>
 <script src="plan.js"></script>
 <script src="planner.js"></script>
+<!-- The seat feed loads itself; see seats.js. It is a script rather than JSON
+     because this page ships connect-src 'none' and must run offline from file://. -->
+<script src="seats.js" defer></script>
+<script src="timetable.js" defer></script>
 </body>
 </html>

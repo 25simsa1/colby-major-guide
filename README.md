@@ -28,6 +28,11 @@ Colby Communications about the wordmark.
 | `flow.js` | The masthead's WebGL noise field. Falls back to a CSS gradient without WebGL. |
 | `verify.mjs` | Data integrity check. `node verify.mjs`, exits non-zero on any problem. |
 | `plan.js` | "Where you stand": matches your course list against the programs you have declared. |
+| `seats.js` | Live seats: badges each course on a route with how full it is. Dark until `seats.data.js` exists. |
+| `build-seats.mjs` | Validates a published seat feed and writes `seats.data.js`. Refuses to write a bad one. |
+| `seats.sample.js` | Invented counts on real course codes, for previewing the layout. `?p=cs#seats=sample`. |
+| `timetable.js` | "Build the week": section search, a Mon-Fri grid, clash detection, and the .ics and print exports. |
+| `SEATS.md` | Where Colby's seat numbers live, what has to be asked for, and the feed contract. |
 | `planner.js` | "Plan the four years": twelve term slots, level checks, and a link that carries a plan to another browser. |
 | `fonts/` | Archivo and Azeret Mono, self-hosted. See `fonts/README.md` before touching them. |
 | `CNAME` | The custom domain. GitHub Pages reads this; deleting it drops the site back to the github.io path. |
