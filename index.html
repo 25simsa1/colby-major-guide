@@ -259,7 +259,7 @@ p { margin: 0; text-wrap: pretty; }
 #chart {
   /* matches the 1600x1000 viewBox, so the plate fills the panel instead of
      letterboxing 85px of dead ground above and below it */
-  display: block; width: 100%; aspect-ratio: 8 / 5;
+  display: block; width: 100%; aspect-ratio: 32 / 23;
   max-height: 82vh; min-height: 400px;
   touch-action: none; cursor: grab;
 }
@@ -276,17 +276,17 @@ p { margin: 0; text-wrap: pretty; }
 .territory[data-div="hum"] { fill: var(--terr-hum-wash); stroke: var(--terr-hum); }
 
 .terr-name {
-  font-family: var(--font-sign); font-weight: 700; font-size: 25px;
-  font-variation-settings: "wdth" 118; letter-spacing: 0.15em; text-transform: uppercase;
+  font-family: var(--font-sign); font-weight: 700;
+  font-variation-settings: "wdth" 112; letter-spacing: 0.11em; text-transform: uppercase;
   pointer-events: none; user-select: none; opacity: 0.55;
 }
 .terr-name[data-div="sci"] { fill: var(--terr-sci); }
 .terr-name[data-div="soc"] { fill: var(--terr-soc); }
 .terr-name[data-div="hum"] { fill: var(--terr-hum); }
 
-.link { stroke: var(--edge); stroke-width: 1.15; fill: none; opacity: 0.55; }
-.link--cross { stroke-dasharray: 6 5; opacity: 0.4; }
-.link--tether { opacity: 0.7; stroke-width: 1; }
+.link { stroke: var(--edge); stroke-width: 1; fill: none; opacity: 0.3; }
+.link--cross { stroke-dasharray: 6 5; opacity: 0.2; }
+.link--tether { opacity: 0.5; stroke-width: 1; }
 .link--tether[data-div="sci"] { stroke: var(--terr-sci); }
 .link--tether[data-div="soc"] { stroke: var(--terr-soc); }
 .link--tether[data-div="hum"] { stroke: var(--terr-hum); }
@@ -304,7 +304,15 @@ p { margin: 0; text-wrap: pretty; }
 .dot[data-kind="minor"][data-div="sci"] .dot__disc { stroke: var(--terr-sci); }
 .dot[data-kind="minor"][data-div="soc"] .dot__disc { stroke: var(--terr-soc); }
 .dot[data-kind="minor"][data-div="hum"] .dot__disc { stroke: var(--terr-hum); }
-.dot[data-kind="minor"] .dot__name { font-size: 15px; fill: var(--ink-3); }
+.dot[data-kind="minor"] .dot__name {
+  font-size: 15px; fill: var(--ink-3);
+  opacity: 0; transition: opacity var(--dur-short) var(--ease-out);
+}
+/* zoom in, or point at one, and the minor names arrive */
+#chart.is-close .dot[data-kind="minor"] .dot__name,
+.dot[data-kind="minor"].is-live .dot__name,
+.dot[data-kind="minor"].is-near .dot__name,
+.dot[data-kind="minor"]:focus-visible .dot__name { opacity: 1; }
 .dot[data-kind="minor"].is-live .dot__disc { fill: var(--signal); stroke: var(--signal); }
 .dot__halo { fill: none; stroke-width: 1.3; opacity: 0; }
 .dot__name {
@@ -330,6 +338,8 @@ p { margin: 0; text-wrap: pretty; }
   letter-spacing: 0.04em; color: var(--ink-3);
 }
 .key div { display: flex; align-items: center; gap: 0.45rem; white-space: nowrap; }
+#zoom-note { color: var(--signal); font-weight: 500; }
+#zoom-note[hidden] { display: none; }
 /* the swatches say what the marks are; this says what they mean */
 .key__note {
   padding: 0 var(--space-lg) var(--space-md);
@@ -719,7 +729,10 @@ p { margin: 0; text-wrap: pretty; }
   .lift { animation: lift var(--dur-long) var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * 65ms); }
   @keyframes lift { from { opacity: 0; transform: translateY(10px); } }
 
-  /* hubs land first, leaves follow: the chart assembles by importance */
+  /* hubs land first, leaves follow: the chart assembles by importance.
+     `backwards` holds each node at opacity 0 through its delay, and CSS animations do
+     not run in a background tab - so the chart could stay blank forever if the page
+     loaded unfocused. map.js adds .entered as a hard floor; see below. */
   .dot { animation: plot 420ms var(--ease-out) backwards; animation-delay: calc(var(--d, 0) * 9ms + 140ms); }
   @keyframes plot { from { opacity: 0; transform: scale(0.55); } }
   .link { animation: ink 760ms var(--ease-out) backwards; animation-delay: 70ms; }
@@ -737,6 +750,13 @@ p { margin: 0; text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
 }
+
+/* the floor: once this lands the chart is visible whatever the animations did or did
+   not do. Only the animation is cancelled - opacity falls back to each element's own
+   rule, so muted and lit states keep working. */
+#chart.entered .dot,
+#chart.entered .link,
+#chart.entered .territory { animation: none !important; }
 </style>
 </head>
 <body>
@@ -799,6 +819,7 @@ p { margin: 0; text-wrap: pretty; }
           <div><span class="key-dot"></span><span class="key-dot key-dot--lg"></span>Sized by connections</div>
           <div><span class="key-ring"></span>Concentration inside a major</div>
           <div><span class="key-hollow"></span>Minor, tethered to its major</div>
+          <div id="zoom-note">Zoom in for minor names</div>
         </div>
         <p class="key__note">Solid pale lines mean two programs share a required course, dashed lines mean that shared requirement crosses a division boundary, the shorter coloured lines tether each minor to the major it lives inside, and any line turns Colby Blue when you select a program at one of its ends.</p>
       </div>
