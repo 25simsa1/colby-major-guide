@@ -7,6 +7,22 @@ the numbers and does not publish them. This file records what was found, what ha
 asked for, and the contract the page is already written against, so that the day a feed
 exists the remaining work is one command.
 
+## A snapshot arrived before the feed did
+
+`seats.data.js` now holds real Colby numbers, captured by hand from Colby's own
+course search and parsed by `build-colby.mjs`. Real seat counts, real meeting
+times, real titles, real cross-listings, real term dates.
+
+It is a **snapshot, not a feed**, and the page says so in the header: it was true
+on the day it was taken and goes stale the moment anyone adds or drops. Refresh it
+by saving the course search to a text file and running:
+
+    node build-colby.mjs colby-fall2026.txt 2026-08-28
+
+Everything below still stands. A dated capture is worth having and is not worth
+mistaking for a live feed, and the request to the registrar is still the thing
+that turns this from a photograph into a window.
+
 ## Status
 
 | Piece | State |

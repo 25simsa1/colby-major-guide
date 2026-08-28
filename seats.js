@@ -128,6 +128,11 @@
       fetchedAt: String(j.fetchedAt || ''),
       source: String(j.source || ''),
       sample: !!j.sample || isSample(),
+      /* a dated capture of a real course search, as opposed to a live feed. The
+         numbers are Colby's, they are just as old as fetchedAt says. */
+      snapshot: !!j.snapshot,
+      termStart: /^\d{4}-\d{2}-\d{2}$/.test(String(j.termStart || '')) ? String(j.termStart) : '',
+      termEnd: /^\d{4}-\d{2}-\d{2}$/.test(String(j.termEnd || '')) ? String(j.termEnd) : '',
       count: kept
     };
 

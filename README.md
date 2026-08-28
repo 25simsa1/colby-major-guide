@@ -28,6 +28,7 @@ Colby Communications about the wordmark.
 | `flow.js` | The masthead's WebGL noise field. Falls back to a CSS gradient without WebGL. |
 | `verify.mjs` | Data integrity check. `node verify.mjs`, exits non-zero on any problem. |
 | `plan.js` | "Where you stand": matches your course list against the programs you have declared. |
+| `report.js` | "Save as PDF": builds the printable advising report from your plan and standing. |
 | `seats.js` | Live seats: badges each course on a route with how full it is. Dark until `seats.data.js` exists. |
 | `build-seats.mjs` | Validates a published seat feed and writes `seats.data.js`. Refuses to write a bad one. |
 | `seats.sample.js` | Invented counts on real course codes, for previewing the layout. `?p=cs#seats=sample`. |

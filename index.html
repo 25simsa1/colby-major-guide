@@ -1114,6 +1114,7 @@ p { margin: 0; text-wrap: pretty; }
 .timetable .tt-btn--quiet:hover { color: var(--colby); border-color: var(--colby); opacity: 1; }
 .timetable .tt-out__note { font-size: var(--text-xs); color: var(--colby); line-height: 1.5; margin-top: var(--space-xs); }
 .timetable .tt-sample { color: var(--terr-hum); font-weight: 700; }
+.timetable .tt-snap { color: var(--terr-soc); font-weight: 700; }
 
 /* ======================= print =======================
  * A schedule that cannot leave the browser is not much of a schedule, and there is
@@ -1357,6 +1358,110 @@ p { margin: 0; text-wrap: pretty; }
 @media (forced-colors: active) {
   .seat { border: 1px solid CanvasText; background: Canvas; color: CanvasText; }
   .seat[data-seat="full"] { background: CanvasText; color: Canvas; }
+}
+
+/* ========================= the printable report =========================
+ * report.js builds a document that only ever exists for the print dialogue.
+ * It is hidden on screen at all times, and the print sheet swaps the whole page
+ * for it only when the root carries data-print="report". Printing the page
+ * without pressing the button keeps the old behaviour: the planner and the week.
+ *
+ * No CSS escape sequences anywhere in this block, deliberately. The last one
+ * here got mangled into a literal NUL byte and shipped. */
+.report { display: none; }
+
+@media print {
+  html[data-print="report"] body > *:not(.report) { display: none !important; }
+  html[data-print="report"] .report { display: block !important; }
+  html[data-print="report"] { --ground: #fff; }
+  html[data-print="report"] body { background: #fff; color: #111; }
+
+  .report {
+    font: 400 9.6pt/1.45 var(--font-sign);
+    color: #111;
+  }
+  .report h1 { font-size: 17pt; line-height: 1.15; margin: 0 0 2mm; letter-spacing: -0.01em; }
+  .report h2 {
+    font-size: 11pt; margin: 0 0 2mm; padding-bottom: 1mm;
+    border-bottom: 1.2pt solid #111;
+  }
+  .report h3 { font-size: 9.8pt; margin: 3mm 0 1mm; }
+  .report h3 i, .report .rp-head i { font-style: normal; font-weight: 400; color: #555; }
+  .report p { margin: 0 0 1.6mm; }
+
+  .rp-kicker {
+    font: 600 7.4pt/1 var(--font-code); letter-spacing: 0.16em;
+    text-transform: uppercase; color: #555; margin-bottom: 1.5mm;
+  }
+  .rp-head { margin-bottom: 5mm; }
+  .rp-meta { font-size: 9pt; color: #333; }
+  .rp-warn {
+    font-size: 8.4pt; line-height: 1.4; color: #111;
+    border: 0.8pt solid #111; padding: 2mm 2.5mm; margin-top: 2.5mm;
+  }
+
+  .rp-sec { margin-bottom: 6mm; break-inside: avoid; }
+  .rp-sec--ask, .rp-sec--next { break-before: auto; }
+  .rp-prog { margin-bottom: 3mm; break-inside: avoid; }
+  .rp-lede { font-size: 8.6pt; color: #444; margin-bottom: 2.5mm; max-width: 150mm; }
+  .rp-count { font-size: 9.2pt; }
+  .rp-dim { color: #666; }
+  .rp-good { font-size: 8.8pt; color: #444; }
+  .rp-empty { font-size: 9pt; color: #444; }
+  .rp-key { font-size: 7.8pt; color: #666; margin-top: 1mm; }
+  .rp-star { font-size: 7pt; }
+
+  .rp-code {
+    font: 500 8.4pt/1.3 var(--font-code); white-space: nowrap;
+    border: 0.6pt solid #999; padding: 0.2mm 1mm; display: inline-block;
+    margin: 0.4mm 0.2mm;
+  }
+  .rp-code[data-shut="yes"] { border-style: dotted; color: #555; }
+
+  .rp-stages { display: grid; grid-template-columns: 15mm 1fr; gap: 0.6mm 2mm; margin: 1.5mm 0 0; }
+  .rp-stages dt {
+    font: 600 7.6pt/1.9 var(--font-code); letter-spacing: 0.06em;
+    text-transform: uppercase; color: #555;
+  }
+  .rp-stages dd { margin: 0; }
+
+  .rp-alarm { border-left: 1.6pt solid #111; padding: 1.5mm 0 1.5mm 3mm; margin: 3mm 0; break-inside: avoid; }
+  .rp-alarm h3 { margin-top: 0; }
+  .rp-alarm ul, .rp-flat, .rp-near, .rp-rules { margin: 1.5mm 0 0; padding-left: 4.5mm; }
+  .rp-alarm li, .rp-flat li, .rp-near li { margin-bottom: 1mm; font-size: 8.8pt; }
+  .rp-near li { margin-bottom: 2mm; }
+  .rp-rules { list-style: none; padding-left: 0; }
+  .rp-rules li {
+    font-size: 8.8pt; line-height: 1.4; margin-bottom: 2mm;
+    padding-left: 7mm; position: relative; break-inside: avoid;
+  }
+  .rp-rules li::before {
+    content: ""; position: absolute; left: 0; top: 0.6mm;
+    width: 3.4mm; height: 3.4mm; border: 0.8pt solid #111;
+  }
+
+  .report table { border-collapse: collapse; width: 100%; margin: 2mm 0; font-size: 8.6pt; }
+  .report th, .report td {
+    border: 0.5pt solid #bbb; padding: 1.2mm 1.6mm; text-align: left; vertical-align: top;
+  }
+  .report thead th {
+    background: #f0f0f0; font-size: 7.6pt; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .rp-grid td { height: 13mm; }
+  .rp-grid tbody th { width: 16mm; font-size: 8pt; background: #f7f7f7; }
+  .rp-reqs td:first-child { width: 52mm; }
+  .rp-next td { height: 8mm; }
+  .rp-next .rp-box { width: 18mm; }
+  .rp-blank td { height: 9mm; background: #fcfcfc; }
+
+  .rp-audit { margin-top: 3mm; }
+  .rp-sub { font-size: 9.4pt; }
+
+  .rp-foot {
+    margin-top: 7mm; padding-top: 2mm; border-top: 0.5pt solid #bbb;
+    font-size: 7.4pt; color: #666;
+  }
+
 }
 </style>
 </head>
@@ -1685,5 +1790,6 @@ p { margin: 0; text-wrap: pretty; }
      because this page ships connect-src 'none' and must run offline from file://. -->
 <script src="seats.js" defer></script>
 <script src="timetable.js" defer></script>
+<script src="report.js" defer></script>
 </body>
 </html>

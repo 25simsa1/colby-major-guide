@@ -485,6 +485,28 @@
     draw();
     if (!el('rec-out').hidden) drawRecs();
   }
+  /* report.js builds the printable document from these. Everything here is a copy:
+     the planner reassigns terms wholesale when a shared link is opened, so handing out
+     the live object would leave the report holding a grid that has already moved. */
+  window.CMGPlanner = {
+    terms: function () {
+      return TERMS.map(function (t) {
+        return {
+          key: t.key, year: t.year, label: t.label, long: t.long,
+          jan: !!t.jan, courses: terms[t.key].slice()
+        };
+      });
+    },
+    janCount: janCount,
+    planned: allPlanned,
+    notesFor: function (code, key) {
+      var t = TERMS.filter(function (x) { return x.key === key; })[0];
+      return t ? notesFor(code, t) : null;
+    },
+    recommend: recommend,
+    reasonsFor: reasonsFor
+  };
+
   PLAN.onChange(refresh);
   API.onChange(refresh);
   draw();

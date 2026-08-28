@@ -475,6 +475,28 @@
       for (var i = 0; i < YEARS.length; i++) if (YEARS[i].key === plan.year) return i;
       return -1;
     },
+    yearLabel: function () {
+      for (var i = 0; i < YEARS.length; i++) if (YEARS[i].key === plan.year) return YEARS[i].label;
+      return '';
+    },
+    /* The fourteen all-College requirements with their current state. report.js wants
+       the how text as much as the label: on screen a student can read the card, but on
+       paper "H . Historical Studies" on its own is not something anyone can act on. */
+    requirements: function () {
+      return REQS.map(function (r) {
+        return {
+          key: r.key, label: plain(r.label), how: plain(r.how),
+          kind: r.kind, need: reqNeed(r), value: reqValue(r), met: reqMet(r)
+        };
+      });
+    },
+    /* Exclusion-group clashes and the no-major case, already worded for a reader. */
+    conflicts: conflicts,
+    /* [{ code, stage }] for one program, stage being the zero-based route year. */
+    routeCourses: function (id) {
+      var pr = API.byId[id];
+      return pr ? routeCourses(pr) : [];
+    },
     onChange: function (fn) { if (typeof fn === 'function') watchers.push(fn); }
   };
   var baseRender = render;

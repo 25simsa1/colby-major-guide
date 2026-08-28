@@ -373,9 +373,13 @@
 
     el('timetable').hidden = false;
     var head = el('tt-term');
+    var when = '';
+    if (meta && meta.snapshot && meta.fetchedAt) {
+      when = ' <b class="tt-snap">a snapshot from ' + esc(meta.fetchedAt.slice(0, 10)) + ', not live</b>';
+    }
     head.innerHTML = (meta && meta.termName ? esc(meta.termName) : 'This term') +
       ' &middot; ' + sections.length + ' sections with times' +
-      (meta && meta.sample ? ' <b class="tt-sample">sample data, not Colby&rsquo;s</b>' : '');
+      (meta && meta.sample ? ' <b class="tt-sample">sample data, not Colby&rsquo;s</b>' : when);
 
     if (meta && meta.termStart && !el('tt-from').value) el('tt-from').value = meta.termStart;
     if (meta && meta.termEnd && !el('tt-to').value) el('tt-to').value = meta.termEnd;
