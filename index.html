@@ -900,6 +900,35 @@ p { margin: 0; text-wrap: pretty; }
  * Every selector here is scoped under .planner. The section defines short names
  * (pterm, pchip, pick) on a page that already uses short names, and an unscoped
  * .stage in the section above this one once flattened the whole chart. */
+.planner .rec { margin-top: var(--space-lg); border-top: 1px solid var(--rule); padding-top: var(--space-md); }
+.planner .rec__go {
+  font: 600 var(--text-sm)/1 var(--font-sign); cursor: pointer; padding: 0.6rem 1rem; border-radius: 2px;
+  border: 1px solid var(--colby); background: var(--colby); color: var(--ground);
+}
+.planner .rec__go:hover { opacity: 0.88; }
+.planner .rec__lede { font-size: var(--text-sm); color: var(--ink-3); max-width: 72ch; line-height: 1.7; margin-top: var(--space-xs); }
+.planner .rec__hint { font-size: var(--text-sm); color: var(--ink-2); max-width: 72ch; line-height: 1.7; margin-top: var(--space-sm); }
+.planner .rec__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); margin: var(--space-md) 0 var(--space-xs); font-size: var(--text-xs); color: var(--ink-3); }
+.planner .rec__bar select { font: 500 var(--text-xs)/1 var(--font-sign); padding: 0.35rem 0.4rem; border: 1px solid var(--rule-2); border-radius: 2px; background: var(--ground); color: var(--ink); }
+.planner .rec__n { margin-left: auto; }
+.planner .rec__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2xs); counter-reset: rec; }
+.planner .rec { }
+.planner li.rec { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-sm); align-items: baseline;
+  border: 1px solid var(--rule); border-left: 3px solid var(--colby); border-radius: 2px;
+  background: var(--ground-2); padding: var(--space-xs) var(--space-sm); margin: 0; }
+.planner li.rec--late { border-left-color: var(--terr-hum); }
+.planner li.rec--shut { opacity: 0.72; border-left-style: dashed; }
+.planner .rec__add {
+  font: 600 var(--text-sm)/1 var(--font-code); font-variant-numeric: tabular-nums; white-space: nowrap;
+  cursor: pointer; padding: 0.34rem 0.5rem; border-radius: 2px;
+  border: 1px solid var(--colby); background: var(--colby); color: var(--ground);
+}
+.planner .rec__add:hover { opacity: 0.85; }
+.planner .rec__add::after { content: "\00a0+"; }
+.planner .rec__why { font-size: var(--text-sm); color: var(--ink-2); line-height: 1.55; }
+.planner .rec__caveat { font-size: var(--text-xs); color: var(--ink-3); max-width: 72ch; line-height: 1.7; margin-top: var(--space-sm); }
+.planner .rec__caveat b { color: var(--ink-2); }
+
 .planner__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); margin: var(--space-lg) 0 var(--space-xs); }
 .planner__btn {
   font: 600 var(--text-sm)/1 var(--font-sign); cursor: pointer; white-space: nowrap;
@@ -1483,6 +1512,13 @@ p { margin: 0; text-wrap: pretty; }
 
     <div id="planner-grid"></div>
     <div id="planner-sum"></div>
+
+    <div class="rec">
+      <button type="button" class="rec__go" id="rec-go">Recommend next courses</button>
+      <p class="rec__lede">Put in everything you have done and everything you have already placed. Then this reads your declared routes and says what is left, soonest first.</p>
+      <div id="rec-out" hidden></div>
+    </div>
+
 
     <p class="datum__note"><b>There is no account, and that is deliberate.</b> Your plan lives in this browser and nowhere else. Hyperschedule can offer a Claremont sign-in because it runs a server that completes the handshake with the colleges&rsquo; identity provider; this site is a handful of files with nothing behind them, and a page that asked you for a Colby password would look exactly like one phishing for it. What signing in really buys is carrying your plan to another device, which the link button above does instead. Nothing here is a registration: <b>a course is only really yours once it is registered in Workday</b>.</p>
 

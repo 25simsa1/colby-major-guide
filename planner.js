@@ -89,6 +89,11 @@
   function esc(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
+  /* program names in data.js are authored HTML ("Music&ndash;IC"), so they are
+     decoded before going into plain-text reasons */
+  var decoder = document.createElement('div');
+  function plain(html) { decoder.innerHTML = String(html); return decoder.textContent || ''; }
+
   function placedIn(code) {
     for (var i = 0; i < TERMS.length; i++) {
       if (terms[TERMS[i].key].indexOf(code) >= 0) return TERMS[i];
@@ -197,6 +202,151 @@
                     : '<p class="planner__hint">Declare a major above and this will tell you how much of it the plan covers.</p>');
   }
 
+
+  /* ------------------------------------------------------- what to take next
+
+     Ranked, and each row carries the reason it is there. A recommendation a
+     student cannot check is worth less than none: the whole claim of this site is
+     that its numbers are real, and an unexplained ordering is just an opinion in a
+     confident font.
+
+     Four signals, all from the catalogue:
+       the year the route puts the course in, which departments wrote themselves;
+       how many of your declared programs name the same course;
+       the level against your class year;
+       and whether you have already done it or already placed it.
+
+     No prerequisite graph. Three route stages in the entire catalogue use the word
+     prerequisite, so building a dependency tree would mean inventing most of it. */
+
+  function stageYearOf(pid, code) {
+    var p = API.byId[pid];
+    if (!p) return null;
+    var rows = API.stageCodes(p), found = null;
+    rows.forEach(function (row, i) {
+      if (found !== null) return;
+      row.forEach(function (codes) {
+        if (found === null && codes && codes.indexOf(code) >= 0) found = i + 1;
+      });
+    });
+    return found;
+  }
+
+  function recommend() {
+    var declared = PLAN.declared();
+    if (!declared.length) return { need: 'declare' };
+
+    var placed = Object.create(null);
+    allPlanned().forEach(function (c) { placed[c] = true; });
+
+    var yrIdx = PLAN.yearIndex();                 /* 0..3, or -1 if unset */
+    var myYear = yrIdx >= 0 ? yrIdx + 1 : null;
+
+    var cand = Object.create(null);
+    declared.forEach(function (pid) {
+      API.coursesOf(pid).forEach(function (code) {
+        if (API.isTaken(code) || placed[code]) return;
+        var row = cand[code] || (cand[code] = { code: code, programs: [], stage: null });
+        row.programs.push(pid);
+        var y = stageYearOf(pid, code);
+        if (y !== null && (row.stage === null || y < row.stage)) row.stage = y;
+      });
+    });
+
+    var list = Object.keys(cand).map(function (c) { return cand[c]; });
+    list.forEach(function (r) {
+      r.level = levelOf(r.code);
+      r.openNow = myYear === null || openInYear(r.code, myYear);
+      r.overdue = myYear !== null && r.stage !== null && r.stage < myYear && r.openNow;
+      r.due = myYear !== null && r.stage === myYear;
+    });
+
+    /* overdue first, then what the route says is due now, then courses that pay for
+       themselves twice, then earliest stage, then the code so it is deterministic */
+    list.sort(function (a, b) {
+      if (a.overdue !== b.overdue) return a.overdue ? -1 : 1;
+      if (a.openNow !== b.openNow) return a.openNow ? -1 : 1;
+      if (a.due !== b.due) return a.due ? -1 : 1;
+      if (a.programs.length !== b.programs.length) return b.programs.length - a.programs.length;
+      var as = a.stage === null ? 9 : a.stage, bs = b.stage === null ? 9 : b.stage;
+      if (as !== bs) return as - bs;
+      return a.code < b.code ? -1 : 1;
+    });
+
+    return { list: list.slice(0, 10), total: list.length, year: myYear };
+  }
+
+  function sentence(t) { return t ? t.charAt(0).toUpperCase() + t.slice(1) : t; }
+
+  function reasonsFor(r, myYear) {
+    var out = [];
+    if (r.programs.length > 1) {
+      out.push('counts toward ' + r.programs.map(function (id) {
+        return plain(API.byId[id].short || API.byId[id].name);
+      }).join(' and '));
+    } else if (r.programs.length === 1) {
+      out.push('on the ' + plain(API.byId[r.programs[0]].short || API.byId[r.programs[0]].name) + ' route');
+    }
+    if (r.stage !== null) {
+      out.push(r.overdue ? 'placed in year ' + r.stage + ', and you are past that'
+                         : 'placed in year ' + r.stage);
+    }
+    if (!r.openNow) {
+      out.push(r.level >= 400 ? 'seniors only' : r.level >= 300 ? 'opens to juniors' : 'opens to sophomores');
+    }
+    return out;
+  }
+
+  function drawRecs() {
+    var host = el('rec-out');
+    var res = recommend();
+    if (res.need === 'declare') {
+      host.innerHTML = '<p class="rec__hint">Declare a major or a minor above first. ' +
+        'Recommendations come out of the routes you are actually on, so with nothing declared ' +
+        'there is nothing to reason from.</p>';
+      return;
+    }
+    if (!res.list.length) {
+      host.innerHTML = '<p class="rec__hint">Every course your declared programs name by number is ' +
+        'either done or already placed. What is left on those routes is the prose kind, ' +
+        'like &ldquo;four electives at the 200 level&rdquo;, which no list of numbers can pick for you.</p>';
+      return;
+    }
+
+    var opts = TERMS.map(function (t) {
+      return '<option value="' + t.key + '"' + (t.key === suggestedTerm() ? ' selected' : '') + '>' +
+             esc(t.long) + '</option>';
+    }).join('');
+
+    var h = '<div class="rec__bar"><span>Add to</span><select id="rec-term">' + opts + '</select>' +
+            '<span class="rec__n">' + res.total + ' course' + (res.total === 1 ? '' : 's') +
+            ' left on your routes</span></div>';
+    h += '<ol class="rec__list">';
+    res.list.forEach(function (r) {
+      var reasons = reasonsFor(r, res.year);
+      h += '<li class="rec' + (r.overdue ? ' rec--late' : '') + (!r.openNow ? ' rec--shut' : '') + '">' +
+        '<button type="button" class="rec__add" data-rec="' + esc(r.code) + '">' + esc(r.code) + '</button>' +
+        '<span class="rec__why">' + esc(sentence(reasons.join('; '))) + '.</span>' +
+        '</li>';
+    });
+    h += '</ol>';
+    h += '<p class="rec__caveat">Ranked by what your own routes say, nothing cleverer. ' +
+      'It cannot see what is actually offered next term, when anything meets, or any prerequisite ' +
+      'the catalogue did not write down, and it has never met you. <b>Take it to your advisor, not instead of them.</b></p>';
+    host.innerHTML = h;
+  }
+
+  /* the first term at or after your year with room in it, so the default is sensible */
+  function suggestedTerm() {
+    var yrIdx = PLAN.yearIndex(), from = yrIdx >= 0 ? yrIdx + 1 : 1;
+    for (var i = 0; i < TERMS.length; i++) {
+      var t = TERMS[i];
+      if (t.year < from || t.jan) continue;
+      if (terms[t.key].length < 4) return t.key;
+    }
+    return 'y' + from + 'f';
+  }
+
   /* ------------------------------------------------------- the add dialog */
 
   var picking = null;
@@ -290,6 +440,20 @@
     if (ev.target === el('picker')) closePicker();
   });
 
+  el('rec-go').addEventListener('click', function () {
+    el('rec-out').hidden = false;
+    drawRecs();
+  });
+
+  el('rec-out').addEventListener('click', function (ev) {
+    if (!ev.target || !ev.target.closest) return;
+    var b = ev.target.closest('[data-rec]');
+    if (!b) return;
+    var sel = el('rec-term');
+    add(b.dataset.rec, sel ? sel.value : suggestedTerm());
+    drawRecs();
+  });
+
   el('planner-clear').addEventListener('click', function () {
     TERMS.forEach(function (t) { terms[t.key] = []; });
     persist();
@@ -317,7 +481,11 @@
       : 'Select the box and copy it yourself.';
   });
 
-  PLAN.onChange(draw);
-  API.onChange(draw);
+  function refresh() {
+    draw();
+    if (!el('rec-out').hidden) drawRecs();
+  }
+  PLAN.onChange(refresh);
+  API.onChange(refresh);
   draw();
 })();
