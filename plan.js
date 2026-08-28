@@ -464,7 +464,21 @@
   });
 
   /* the tray and the chart write the same taken-courses list, so redraw on their changes */
-  API.onChange(render);
+  API.onChange(function () { render(); });   /* late-bound: render is wrapped below */
+
+  /* planner.js needs to know what has been declared, and to hear about changes */
+  var watchers = [];
+  window.CMGPlan = {
+    declared: function () { return plan.programs.slice(); },
+    year: function () { return plan.year; },
+    yearIndex: function () {
+      for (var i = 0; i < YEARS.length; i++) if (YEARS[i].key === plan.year) return i;
+      return -1;
+    },
+    onChange: function (fn) { if (typeof fn === 'function') watchers.push(fn); }
+  };
+  var baseRender = render;
+  render = function () { baseRender(); watchers.forEach(function (fn) { try { fn(); } catch (e) {} }); };
 
   render();
 })();
